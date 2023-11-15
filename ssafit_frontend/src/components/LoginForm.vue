@@ -1,9 +1,9 @@
 <template>
   <div class="container">
     <h2>로그인</h2>
-    <fieldset class="text-center">
-      <label for="id">아이디</label>
-      <input type="text" id="id" v-model="id" class="view" /><br />
+    <fieldset class="center">
+      <label for="email">이메일</label>
+      <input type="email" id="email" v-model="email" class="view" /><br />
       <label for="password">비밀번호</label>
       <input
         type="password"
@@ -17,19 +17,32 @@
 </template>
 
 <script setup>
-import { ref, defineEmits } from "vue";
+import { ref } from "vue";
+import { useAuthStore } from "@/stores/pinia";
+import { useRouter } from "vue-router";
 
-const id = ref("");
+const authStore = useAuthStore();
+const router = useRouter();
+const email = ref("");
 const password = ref("");
 
-const emit = defineEmits(["login-user"]);
-
 const login = () => {
-  console.log("asdkl;fjas");
   let user = {
-    id: id.value,
+    email: email.value,
     password: password.value,
   };
-  emit("login-user", user);
+  authStore.loginUser(user);
+  router.push("/");
 };
 </script>
+
+<style>
+.center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: fit-content;
+  height: fit-content;
+}
+</style>

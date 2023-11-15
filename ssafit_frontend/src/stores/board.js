@@ -3,13 +3,13 @@ import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
 
-const REST_BOARD_API = `http://localhost:8080/board`;
+const REST_BOARD_API = `http://localhost:8080/api/board`;
 
 export const useBoardStore = defineStore("board", () => {
   const boardList = ref([]);
   const getBoardList = function () {
-    axios.get(`${REST_BOARD_API}/list`).then((response) => {
-      boardList.value = response.data;
+    axios.get(REST_BOARD_API).then((response) => {
+      boardList.value = response.data.list;
     });
   };
 
@@ -24,7 +24,7 @@ export const useBoardStore = defineStore("board", () => {
   //게시글 등록
   const createBoard = function (board) {
     axios({
-      url: REST_BOARD_API,
+      url: `${REST_BOARD_API}`,
       method: "POST",
       //아래꺼 없어도 알아서 보내더라 axios 쵝오~
       headers: {

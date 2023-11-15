@@ -10,17 +10,18 @@
         <th>조회수</th>
         <th>등록일</th>
       </tr>
-      <tr v-for="board in store.boardList" :key="board.id">
-        <td>{{ board.id }}</td>
+      <tr v-for="board in store.boardList" :key="board.no">
+        <td>{{ board.no }}</td>
         <td>
-          <RouterLink :to="`/board/${board.id}`">{{ board.title }}</RouterLink>
+          <RouterLink :to="`/board/${board.no}`">{{ board.title }}</RouterLink>
         </td>
-        <td>{{ board.writer }}</td>
-        <td>{{ board.viewCnt }}</td>
-        <td>{{ board.regDate }}</td>
+        <td>{{ board.type }}</td>
+        <td>{{ board.memberNo }}</td>
+        <td>{{ board.createdTime }}</td>
       </tr>
     </table>
-
+    <hr />
+    <br />
     <BoardSearchInput />
   </div>
 </template>
@@ -30,7 +31,7 @@ import { useBoardStore } from "@/stores/board";
 import { onMounted } from "vue";
 import BoardSearchInput from "./BoardSearchInput.vue";
 const store = useBoardStore();
-
+console.log(store.boardList.list);
 onMounted(() => {
   store.getBoardList();
 });

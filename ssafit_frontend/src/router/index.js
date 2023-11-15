@@ -3,7 +3,7 @@ import HomeView from "@/views/HomeView.vue";
 import BoardView from "@/views/BoardView.vue";
 import LoginForm from "@/components/LoginForm.vue";
 import User from "../views/UserView.vue";
-import UserRegist from "@/components/user/UserRegist.vue";
+import UserCreate from "@/components/user/UserCreate.vue";
 import UserDetail from "@/components/user/UserDetail.vue";
 import BoardList from "@/components/board/BoardList.vue";
 import BoardCreate from "@/components/board/BoardCreate.vue";
@@ -57,7 +57,7 @@ const router = createRouter({
         {
           path: "regist",
           name: "Regist",
-          component: UserRegist,
+          component: UserCreate,
         },
         {
           path: ":id",

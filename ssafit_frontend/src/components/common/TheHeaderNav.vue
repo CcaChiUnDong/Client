@@ -7,9 +7,13 @@
         <RouterLink :to="{ name: 'boardCreate' }">BoardCreate</RouterLink>
       </div>
       <div>
-        <a href="#" v-if="getUser" @click="logout">로그아웃</a>
+        <a>{{ authStore.user?.name }}</a>
+        <a href="/" v-if="authStore.user" @click="logout">로그아웃</a>
         <RouterLink to="/login" v-else>로그인 </RouterLink>
-        <RouterLink :to="{ name: 'Regist' }">회원가입</RouterLink>
+        <RouterLink :to="{ name: 'Regist' }" v-if="authStore.user"
+          >마이페이지</RouterLink
+        >
+        <RouterLink :to="{ name: 'Regist' }" v-else>회원가입</RouterLink>
       </div>
     </nav>
   </header>
@@ -17,14 +21,13 @@
 
 <script setup>
 import { computed } from "vue";
-
-const props = defineProps(["user"]);
-const emits = defineEmits(["logout"]);
-
-const getUser = computed(() => !!props.user);
+import { useAuthStore } from "@/stores/pinia";
+import { useRouter } from "vue-router";
+const authStore = useAuthStore();
+const router = useRouter();
 
 const logout = () => {
-  emits("logout");
+  authStore.logout();
 };
 </script>
 
