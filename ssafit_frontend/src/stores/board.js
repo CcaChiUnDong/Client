@@ -2,42 +2,52 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
+import { useAuthStore } from "./pinia";
 
-const REST_BOARD_API = `http://localhost:8080/api/board`;
+const REST_BOARD_API = `http://localhost:8080/board`;
 
 export const useBoardStore = defineStore("board", () => {
   const boardList = ref([]);
+
   const getBoardList = function () {
     axios.get(REST_BOARD_API).then((response) => {
-      boardList.value = response.data.list;
+      console.log(response.data);
+      boardList.value = response.data;
     });
   };
 
   //게시글 한개
-  const board = ref({});
+  const board = ref({ user: {} });
   const getBoard = function (id) {
     axios.get(`${REST_BOARD_API}/${id}`).then((response) => {
+      console.log(response.data);
       board.value = response.data;
     });
   };
 
   //게시글 등록
   const createBoard = function (board) {
+    const currentUser = useAuthStore().user;
+    console.log(currentUser.id);
+    const boardWithUser = {
+      ...board,
+      user_id: currentUser.id,
+    };
+
     axios({
       url: `${REST_BOARD_API}`,
       method: "POST",
-      //아래꺼 없어도 알아서 보내더라 axios 쵝오~
       headers: {
         "Content-Type": "application/json",
       },
-      data: board,
+      data: boardWithUser,
     })
       .then(() => {
-        //response 응답으로 들어온 게시글의 id를 이용해서
-        //상세보기로 바로 점프도 가넝이야~~
+        console.log(boardWithUser);
         router.push({ name: "boardList" });
       })
       .catch((err) => {
+        console.log(boardWithUser);
         console.log(err);
       });
   };

@@ -9,15 +9,21 @@
       </div>
       <div>
         <label for="writer">작성자 : </label>
-        <input type="text" id="writer" v-model="board.writer" />
+        <input
+          readonly
+          type="text"
+          id="name"
+          v-model="user.name"
+          class="view"
+        />
       </div>
       <div>
-        <label for="content">내용 : </label>
+        <label for="contents">내용 : </label>
         <textarea
-          id="content"
+          id="contents"
           cols="30"
           rows="10"
-          v-model="board.content"
+          v-model="board.contents"
         ></textarea>
       </div>
       <div>
@@ -30,12 +36,13 @@
 <script setup>
 import { ref } from "vue";
 import { useBoardStore } from "@/stores/board";
+import { useAuthStore } from "../../stores/pinia";
 
+const user = useAuthStore().user;
 const store = useBoardStore();
 const board = ref({
   title: "",
-  writer: "",
-  content: "",
+  contents: "",
 });
 
 const createBoard = function () {

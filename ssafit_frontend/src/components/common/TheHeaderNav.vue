@@ -7,7 +7,7 @@
         <RouterLink :to="{ name: 'boardCreate' }">BoardCreate</RouterLink>
       </div>
       <div>
-        <a>{{ authStore.user?.name }}</a>
+        <span v-if="authStore.user">{{ authStore.user?.name }} 님</span>
         <a href="/" v-if="authStore.user" @click="logout">로그아웃</a>
         <RouterLink to="/login" v-else>로그인 </RouterLink>
         <RouterLink :to="{ name: 'Regist' }" v-if="authStore.user"
@@ -58,6 +58,12 @@ header {
 }
 
 header a {
+  margin: 10px;
+  text-decoration: none;
+  color: white;
+}
+
+header span {
   margin: 10px;
   text-decoration: none;
   color: white;
