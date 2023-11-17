@@ -18,9 +18,15 @@
         class="view"
       /><br />
       <label for="name">이름</label>
-      <input type="text" id="name" v-model="user.name" class="view" /><br />
+      <input
+        readonly
+        type="text"
+        id="name"
+        v-model="user.name"
+        class="view"
+      /><br />
       <button class="btn" @click="updateUser">수정</button>
-      <button class="btn" @click="deleteUser">삭제</button>
+      <button class="btn" @click="deleteUser">회원 탈퇴</button>
     </fieldset>
   </div>
 </template>
@@ -28,38 +34,16 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import axios from "axios";
-
-const emit = defineEmits();
-
-const user = ref({
-  password: "",
-  name: "",
-  email: "",
-});
+import { useAuthStore } from "../../stores/pinia";
+const user = useAuthStore().user;
 
 const updateUser = () => {
-  emit("update-user", user.value);
+  emit("update-user", user);
 };
 
 const deleteUser = () => {
-  emit("delete-user", user.value);
+  emit("delete-user", user);
 };
 
-onMounted(() => {
-  const pathName = new URL(document.location).pathname.split("/");
-  const userId = pathName[pathName.length - 1];
-  const API_URL = `http://localhost:8080/user/${userId}`;
-  axios({
-    url: API_URL,
-    method: "GET",
-  })
-    .then((res) => {
-      user.value.password = res.data.password;
-      user.value.name = res.data.name;
-      user.value.email = res.data.email;
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-});
+onMounted(() => {});
 </script>

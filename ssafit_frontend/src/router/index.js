@@ -39,7 +39,7 @@ const router = createRouter({
           component: BoardDetail,
         },
         {
-          path: "update",
+          path: ":id/update",
           name: "boardUpdate",
           component: BoardUpdate,
         },

@@ -52,10 +52,27 @@ export const useBoardStore = defineStore("board", () => {
       });
   };
 
-  const updateBoard = function () {
-    axios.put(REST_BOARD_API, board.value).then(() => {
-      router.push({ name: "boardList" });
-    });
+  const updateBoard = function (id, board) {
+    const newBoard = {
+      id: board.id,
+      user_id: board.userId,
+      title: board.title,
+      contents: board.contents,
+    };
+    axios({
+      url: `${REST_BOARD_API}/${id}`,
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      data: newBoard,
+    })
+      .then(() => {
+        router.push({ name: "boardList" });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   const searchBoardList = function (searchCondition) {

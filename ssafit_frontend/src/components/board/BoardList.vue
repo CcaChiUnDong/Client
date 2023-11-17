@@ -37,14 +37,22 @@ import { onMounted } from "vue";
 import BoardSearchInput from "./BoardSearchInput.vue";
 const store = useBoardStore();
 
-const formatCreatedAt = (createdAt) => {
-  const date = new Date(createdAt);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  const hours = String(date.getHours()).padStart(2, "0");
+const formatCreatedAt = (createAt) => {
+  const date = new Date(createAt);
+  const currentDate = new Date();
+  const timeDifference = currentDate.getTime() - date.getTime();
+  const seconds = Math.floor(timeDifference / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
 
-  return `${year}/${month}/${day} ${hours}시`;
+  if (days > 0) {
+    return `${days}일 전`;
+  } else if (hours > 0) {
+    return `${hours}시간 전`;
+  } else {
+    return `${minutes}분 전`;
+  }
 };
 
 onMounted(() => {

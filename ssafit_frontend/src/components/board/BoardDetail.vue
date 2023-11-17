@@ -34,10 +34,24 @@
         v-model="formattedCreatedAt"
         class="view"
       /><br />
-      <button @click="deleteBoard">삭제</button>
-      <button @click="updateBoard">수정</button>
+      <div style="float: right">
+        <RouterLink
+          :to="`/board/${store.board.id}/update`"
+          v-if="store.board.user.id == user.id"
+          >수정</RouterLink
+        >
+        <button
+          style="margin: 10px"
+          @click="deleteBoard"
+          v-if="store.board.user.id == user.id"
+        >
+          삭제
+        </button>
+      </div>
     </fieldset>
-    <button class="btn-sm" onclick="location.href='/board'">목록</button>
+    <CommentList />
+    <CommentCreate />
+    <button class="btn" onclick="location.href='/board'">목록</button>
   </div>
 </template>
 
@@ -45,9 +59,15 @@
 import { useRoute, useRouter } from "vue-router";
 import { useBoardStore } from "@/stores/board";
 import { computed, ref, onMounted } from "vue";
+import { useAuthStore } from "../../stores/pinia";
+import CommentCreate from "../boardComment/CommentCreate.vue";
+import CommentList from "../boardComment/CommentList.vue";
 import axios from "axios";
 
 const store = useBoardStore();
+const user = useAuthStore().user;
+
+console.log(user.id);
 
 const route = useRoute();
 const router = useRouter();

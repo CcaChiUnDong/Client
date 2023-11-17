@@ -10,7 +10,7 @@
         <span v-if="authStore.user">{{ authStore.user?.name }} 님</span>
         <a href="/" v-if="authStore.user" @click="logout">로그아웃</a>
         <RouterLink to="/login" v-else>로그인 </RouterLink>
-        <RouterLink :to="{ name: 'Regist' }" v-if="authStore.user"
+        <RouterLink :to="`/user/${authStore.user.id}`" v-if="authStore.user"
           >마이페이지</RouterLink
         >
         <RouterLink :to="{ name: 'Regist' }" v-else>회원가입</RouterLink>
