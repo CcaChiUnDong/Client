@@ -86,13 +86,11 @@ export const useBoardStore = defineStore("board", () => {
   };
 
   const searchBoardList = function (searchCondition) {
-    axios
-      .get(REST_BOARD_API, {
-        params: searchCondition,
-      })
-      .then((res) => {
-        boardList.value = res.data;
-      });
+    axios.post(`${REST_BOARD_API}/search`, searchCondition).then((res) => {
+      boardList.value = res.data;
+      console.log(searchCondition);
+      console.log(boardList.value);
+    });
   };
 
   return {

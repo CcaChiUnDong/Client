@@ -11,7 +11,7 @@
       <p>{{ youtubeStore.state.top3Videos[index]?.title }}</p>
       <img
         :src="youtubeStore.state.top3Videos[index]?.thumbnail"
-        alt="동영상 썸네일"
+        alt="videoThumbnail"
       />
     </div>
   </div>
