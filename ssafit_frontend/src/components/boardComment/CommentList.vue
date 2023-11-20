@@ -10,6 +10,13 @@
         <td>{{ comment.content }}</td>
         <td>{{ comment.user.name }}</td>
         <td>{{ formatCreatedAt(comment.create_at) }}</td>
+        <button
+          class="btn-sm"
+          v-if="comment.user.id == user.id"
+          @click="deleteComment(comment.id)"
+        >
+          삭제
+        </button>
       </tr>
     </table>
   </div>
@@ -18,12 +25,15 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { computed, ref, onMounted } from "vue";
+import { useAuthStore } from "../../stores/pinia";
 import axios from "axios";
 
 const route = useRoute();
+const router = useRouter();
 const REST_COMMENT_API = `http://localhost:8080/comment`;
 
 const commentList = ref([]);
+const user = useAuthStore().user;
 
 const getCommentList = function () {
   axios
@@ -35,6 +45,12 @@ const getCommentList = function () {
     .catch((err) => {
       console.log(err);
     });
+};
+
+const deleteComment = function (commentId) {
+  axios.delete(`http://localhost:8080/comment/${commentId}`).then(() => {
+    router.go(0);
+  });
 };
 
 const formatCreatedAt = (create_at) => {

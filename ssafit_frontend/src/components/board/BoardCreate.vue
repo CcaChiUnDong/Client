@@ -18,6 +18,10 @@
         />
       </div>
       <div>
+        <label for="writer">URL : </label>
+        <input type="text" id="url" v-model="board.url" />
+      </div>
+      <div>
         <label for="contents">내용 : </label>
         <textarea
           id="contents"
@@ -43,6 +47,7 @@ const store = useBoardStore();
 const board = ref({
   title: "",
   contents: "",
+  url: "",
 });
 
 const createBoard = function () {

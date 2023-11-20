@@ -7,24 +7,33 @@ export const useAuthStore = defineStore("auth", {
   }),
 
   actions: {
-    // Load user from localStorage
+    // Load user from sessionStorage
     loadUser() {
-      const savedUser = localStorage.getItem("loginUser");
-      if (savedUser) {
-        this.user = JSON.parse(savedUser) || null;
+      try {
+        const savedUser = sessionStorage.getItem("loginUser");
+        console.log("Saved user data:", savedUser);
+
+        if (savedUser) {
+          this.user = JSON.parse(savedUser) || null;
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        // Handle the error, e.g., clear sessionStorage or set user to null
+        sessionStorage.removeItem("loginUser");
+        this.user = null;
       }
     },
 
     // Set the current user
     setUser(user) {
       this.user = user;
-      localStorage.setItem("loginUser", JSON.stringify(user));
+      sessionStorage.setItem("loginUser", JSON.stringify(user));
     },
 
     // Logout user
     logout() {
       this.user = null;
-      localStorage.removeItem("loginUser");
+      sessionStorage.removeItem("loginUser");
     },
 
     // Login user
@@ -34,13 +43,19 @@ export const useAuthStore = defineStore("auth", {
           `http://localhost:8080/user/login`,
           user
         );
-        const matchedUser = response.data;
+        const jwtToken = response.data; // 서버에서 jwt를 받아옴
+        console.log(jwtToken);
 
-        if (matchedUser) {
-          this.setUser(matchedUser);
-          alert("로그인 성공_pinia");
+        if (jwtToken) {
+          const decodedUser = decodeJwtToken(jwtToken);
+          this.setUser(decodedUser);
+
+          // 또는 토큰을 그대로 저장할 수 있습니다.
+          sessionStorage.setItem("loginUser", JSON.stringify(jwtToken));
+
+          alert("로그인 성공");
         } else {
-          alert("로그인 실패_pinia");
+          alert("로그인 실패");
         }
       } catch (error) {
         console.error(error);
@@ -80,3 +95,7 @@ export const useAuthStore = defineStore("auth", {
     },
   },
 });
+
+function decodeJwtToken(token) {
+  return {};
+}

@@ -3,11 +3,10 @@
     <nav class="header-nav">
       <div>
         <RouterLink to="/">Home</RouterLink>
-        <RouterLink :to="{ name: 'boardList' }">BoardList</RouterLink>
-        <RouterLink :to="{ name: 'boardCreate' }">BoardCreate</RouterLink>
+        <RouterLink :to="{ name: 'boardList' }">게시판</RouterLink>
       </div>
       <div>
-        <span v-if="authStore.user">{{ authStore.user?.name }} 님</span>
+        <span v-if="authStore.user">{{ authStore.user.name }} 님</span>
         <a href="/" v-if="authStore.user" @click="logout">로그아웃</a>
         <RouterLink to="/login" v-else>로그인 </RouterLink>
         <RouterLink :to="`/user/${authStore.user.id}`" v-if="authStore.user"

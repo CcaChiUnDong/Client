@@ -9,11 +9,16 @@
         <th>내용</th>
         <th>작성자</th>
         <th>등록일</th>
+        <th>조회수</th>
       </tr>
       <tr v-for="board in store.boardList" :key="board.id">
         <td>{{ board.id }}</td>
         <td>
-          <RouterLink :to="`/board/${board.id}`">{{ board.title }}</RouterLink>
+          <RouterLink
+            :to="`/board/${board.id}`"
+            style="text-decoration: none"
+            >{{ board.title }}</RouterLink
+          >
         </td>
         <td>
           {{ board.contents.slice(0, 15)
@@ -23,9 +28,18 @@
         </td>
         <td>{{ board.user.name }}</td>
         <td>{{ formatCreatedAt(board.createdAt) }}</td>
+        <td>{{ board.visited }}</td>
       </tr>
     </table>
     <hr />
+    <div>
+      <RouterLink
+        :to="{ name: 'boardCreate' }"
+        style="text-decoration: none"
+        v-if="authStore.user"
+        >게시글 작성</RouterLink
+      >
+    </div>
     <br />
     <BoardSearchInput />
   </div>
@@ -33,8 +47,11 @@
 
 <script setup>
 import { useBoardStore } from "@/stores/board";
+import { useAuthStore } from "../../stores/pinia";
 import { onMounted } from "vue";
 import BoardSearchInput from "./BoardSearchInput.vue";
+
+const authStore = useAuthStore();
 const store = useBoardStore();
 
 const formatCreatedAt = (createAt) => {

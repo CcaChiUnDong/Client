@@ -7,12 +7,21 @@ import { useAuthStore } from "./pinia";
 const REST_BOARD_API = `http://localhost:8080/board`;
 
 export const useBoardStore = defineStore("board", () => {
+  //게시글 전체
   const boardList = ref([]);
-
   const getBoardList = function () {
     axios.get(REST_BOARD_API).then((response) => {
       console.log(response.data);
       boardList.value = response.data;
+    });
+  };
+
+  //게시글 조회수 상위 3개
+  const top3BoardList = ref([]);
+  const getTop3BoardList = function () {
+    axios.get(`${REST_BOARD_API}/top3`).then((response) => {
+      console.log(response.data);
+      top3BoardList.value = response.data;
     });
   };
 
@@ -58,6 +67,7 @@ export const useBoardStore = defineStore("board", () => {
       user_id: board.userId,
       title: board.title,
       contents: board.contents,
+      url: board.url,
     };
     axios({
       url: `${REST_BOARD_API}/${id}`,
@@ -88,6 +98,8 @@ export const useBoardStore = defineStore("board", () => {
   return {
     boardList,
     getBoardList,
+    top3BoardList,
+    getTop3BoardList,
     board,
     getBoard,
     createBoard,

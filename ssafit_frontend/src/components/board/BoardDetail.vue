@@ -18,6 +18,33 @@
         v-model="store.board.user.name"
         class="view"
       /><br />
+      <label for="url">URL</label>
+      <div v-if="isYouTubeVideo(store.board.url)">
+        <iframe
+          width="560"
+          height="315"
+          :src="getYouTubeEmbedUrl(store.board.url)"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <div v-else-if="isYouTubeVideoId(store.board.url)">
+        <iframe
+          width="560"
+          height="315"
+          :src="getYouTubeEmbedUrlById(store.board.url)"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
+      <input
+        v-else
+        readonly
+        type="text"
+        id="url"
+        v-model="store.board.url"
+        class="view"
+      /><br />
       <label for="contents">내용</label>
       <input
         readonly
@@ -37,13 +64,13 @@
       <div style="float: right">
         <RouterLink
           :to="`/board/${store.board.id}/update`"
-          v-if="store.board.user.id == user.id"
+          v-if="store.board.userId == user.id"
           >수정</RouterLink
         >
         <button
           style="margin: 10px"
           @click="deleteBoard"
-          v-if="store.board.user.id == user.id"
+          v-if="store.board.userId == user.id"
         >
           삭제
         </button>
@@ -51,14 +78,14 @@
     </fieldset>
     <CommentList />
     <CommentCreate />
-    <button class="btn" onclick="location.href='/board'">목록</button>
+    <button class="btn" @click="goToList">목록</button>
   </div>
 </template>
 
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { useBoardStore } from "@/stores/board";
-import { computed, ref, onMounted } from "vue";
+import { computed, onMounted } from "vue";
 import { useAuthStore } from "../../stores/pinia";
 import CommentCreate from "../boardComment/CommentCreate.vue";
 import CommentList from "../boardComment/CommentList.vue";
@@ -66,11 +93,21 @@ import axios from "axios";
 
 const store = useBoardStore();
 const user = useAuthStore().user;
-
-console.log(user.id);
-
 const route = useRoute();
 const router = useRouter();
+
+const isYouTubeVideo = (url) => url && url.includes("youtube.com");
+
+const getYouTubeEmbedUrl = (url) => {
+  const videoId = url.split("v=")[1];
+  return `https://www.youtube.com/embed/${videoId}`;
+};
+
+const isYouTubeVideoId = (url) => url;
+
+const getYouTubeEmbedUrlById = () => {
+  return `https://www.youtube.com/embed/${store.board.url}`;
+};
 
 const formattedCreatedAt = computed(() => {
   const date = new Date(store.board.createdAt);
@@ -87,14 +124,14 @@ onMounted(() => {
   store.getBoard(route.params.id);
 });
 
-const deleteBoard = function () {
+const deleteBoard = () => {
   axios.delete(`http://localhost:8080/board/${route.params.id}`).then(() => {
     router.push({ name: "boardList" });
   });
 };
 
-const updateBoard = function () {
-  router.push({ name: "boardUpdate" });
+const goToList = () => {
+  router.push({ name: "boardList" });
 };
 </script>
 

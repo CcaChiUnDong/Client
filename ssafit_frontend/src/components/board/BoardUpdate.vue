@@ -5,7 +5,12 @@
       <legend>등록</legend>
       <div>
         <label for="title">제목 : </label>
-        <input type="text" id="title" v-model="store.board.title" />
+        <input
+          style="width: 50%"
+          type="text"
+          id="title"
+          v-model="store.board.title"
+        />
       </div>
       <div>
         <label for="writer">작성자 : </label>
@@ -17,10 +22,20 @@
         />
       </div>
       <div>
+        <label for="writer">URL : </label>
+        <input
+          style="width: 50%"
+          type="text"
+          id="writer"
+          readonly
+          v-model="store.board.url"
+        />
+      </div>
+      <div>
         <label for="contents">내용 : </label>
         <textarea
           id="contents"
-          cols="30"
+          style="width: 50%"
           rows="10"
           v-model="store.board.contents"
         ></textarea>

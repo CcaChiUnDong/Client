@@ -9,6 +9,7 @@ import BoardList from "@/components/board/BoardList.vue";
 import BoardCreate from "@/components/board/BoardCreate.vue";
 import BoardDetail from "@/components/board/BoardDetail.vue";
 import BoardUpdate from "@/components/board/BoardUpdate.vue";
+import Top3BoardList from "@/components/board/BoardTop3.vue";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -17,6 +18,7 @@ const router = createRouter({
       path: "/",
       name: "home",
       component: HomeView,
+      children: [{ path: "", name: "top3boardList", component: Top3BoardList }],
     },
     {
       path: "/board",
