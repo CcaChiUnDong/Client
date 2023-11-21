@@ -11,7 +11,7 @@
         v-model="password"
         class="view"
       /><br />
-      <button class="btn" @click="login">로그인</button>
+      <CustomButton @click="login" text="로그인" ></CustomButton>
     </fieldset>
   </div>
 </template>
@@ -20,6 +20,7 @@
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/pinia";
 import { useRouter } from "vue-router";
+import CustomButton from "../elements/CustomButton.vue";
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -37,6 +38,13 @@ const login = () => {
 </script>
 
 <style>
+.container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: calc(100vh - 70px);
+}
 .center {
   position: absolute;
   top: 50%;

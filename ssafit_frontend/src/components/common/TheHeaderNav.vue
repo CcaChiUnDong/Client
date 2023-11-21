@@ -19,12 +19,16 @@
 </template>
 
 <script setup>
-import { computed } from "vue";
+import { ref } from "vue";
 import { useAuthStore } from "@/stores/pinia";
 import { useRouter } from "vue-router";
+import { globalColor } from "../../global/rootColor";
 const authStore = useAuthStore();
 const router = useRouter();
-
+const primaryColor  = ref(globalColor.primaryColor);
+const primaryColorBabyBlue  = ref(globalColor.primaryColorBabyBlue);
+const primaryColorTiffanyBlue  = ref(globalColor.primaryColorTiffanyBlue);
+const primaryColorBlueGreen  = ref(globalColor.primaryColorBlueGreen);
 const logout = () => {
   authStore.logout();
 };
@@ -33,6 +37,9 @@ const logout = () => {
 <style scoped>
 #container {
   text-align: center;
+}
+*{
+  font-size: 20px;
 }
 /* 
 nav {
@@ -46,12 +53,12 @@ nav a {
 }
 
 nav a.router-link-exact-active {
-  color: #42b983;
+  color: v-bind(primaryColorBabyBlue);
 }
 
 header {
   height: 70px;
-  background-color: #53e3a6;
+  background-color: v-bind(primaryColorTiffanyBlue);
   line-height: 70px;
   padding: 0px 30px;
 }
