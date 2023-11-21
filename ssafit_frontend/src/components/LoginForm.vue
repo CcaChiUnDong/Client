@@ -22,7 +22,6 @@ import { useAuthStore } from "@/stores/pinia";
 import { useRouter } from "vue-router";
 import CustomButton from "../elements/CustomButton.vue";
 import router from "../router";
-import { useAuthStore } from "../stores/pinia";
 
 const email = ref("");
 const password = ref("");
