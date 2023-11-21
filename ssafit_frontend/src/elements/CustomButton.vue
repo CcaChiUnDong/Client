@@ -27,12 +27,13 @@
 
   </script>
   
-  <style>
+  <style scoped>
     *{
 
         font-family: "KoPubDotumBold.ttf";
     }
     .btnContainer{
+        background-color: white;
         display: flex;
         justify-content: center;
         align-items: center;

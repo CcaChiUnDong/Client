@@ -13,7 +13,8 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/pinia";
-
+import { globalColor } from "../global/rootColor";
+const colors = ref(globalColor)
 const authStore = useAuthStore();
 const router = useRouter();
 
@@ -37,15 +38,17 @@ const deleteUser = (user) => {
 }
 
 .view {
-  width: 80%;
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 1px solid v-bind(colors.primaryColorBabyBlue);
   border-radius: 4px;
   box-sizing: border-box;
   color: #787878;
   font-size: medium;
+}:focus{
+  border: 1px solid v-bind(colors.primaryColorTiffanyBlue);
+  outline : none;
 }
 
 label {

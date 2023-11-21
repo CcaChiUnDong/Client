@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <h2>회원 가입</h2>
-    <fieldset class="text-center">
+    <div class="con">
+    <div class="text-center">
       <label for="name">이름</label>
       <input type="text" id="name" v-model="name" class="view" /><br />
       <label for="email">이메일</label>
@@ -21,8 +21,12 @@
         v-model="password2"
         class="view"
       /><br />
-      <button class="btn" @click="regist">등록</button>
-    </fieldset>
+      <CustomButton 
+      @click="regist" 
+      text="등록"
+      />
+    </div>
+  </div>
   </div>
 </template>
 
@@ -30,6 +34,10 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import CustomButton from "../../elements/CustomButton.vue";
+import { globalColor } from "../../global/rootColor";
+
+const color = ref(globalColor.primaryColorTiffanyBlue)
 
 const REST_USER_API = `http://localhost:8080/user`;
 
@@ -100,3 +108,23 @@ const createUser = (user) => {
   }
 };
 </script>
+
+<style scoped>
+  .container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .text-center{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .con{
+    width: 25%;
+    padding: 30px;
+    border: 1px v-bind(color) solid;
+    border-radius: 10px;
+  }
+</style>
