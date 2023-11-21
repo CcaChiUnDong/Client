@@ -11,7 +11,7 @@
         v-model="password"
         class="view"
       /><br />
-      <CustomButton @click="login" text="로그인" ></CustomButton>
+      <CustomButton @click="loginUser" text="로그인" ></CustomButton>
     </fieldset>
   </div>
 </template>
@@ -21,19 +21,24 @@ import { ref } from "vue";
 import { useAuthStore } from "@/stores/pinia";
 import { useRouter } from "vue-router";
 import CustomButton from "../elements/CustomButton.vue";
+import router from "../router";
+import { useAuthStore } from "../stores/pinia";
 
-const authStore = useAuthStore();
-const router = useRouter();
 const email = ref("");
 const password = ref("");
 
-const login = () => {
-  let user = {
-    email: email.value,
-    password: password.value,
-  };
-  authStore.loginUser(user);
-  router.push("/");
+const loginUser = () => {
+  // 아이디와 패스워드 입력 여부 확인
+  if (email.value && password.value) {
+    const user = {
+      email: email.value,
+      password: password.value,
+    };
+    useAuthStore.loginUser(user);
+    router.push({ name: "home" });
+  } else {
+    alert("아이디 또는 비밀번호가 입력되지 않았습니다.");
+  }
 };
 </script>
 

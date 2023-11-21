@@ -10,7 +10,7 @@
       <h3>{{ board.title }}</h3>
       <p>{{ youtubeStore.state.top3Videos[index]?.title }}</p>
       <img
-        :src="youtubeStore.state.top3Videos[index]?.thumbnail"
+        :src="youtubeStore.state.top3Videos[index].thumbnail"
         alt="videoThumbnail"
       />
     </div>
@@ -21,7 +21,7 @@
 import { useYoutubeStore } from "@/stores/youtube";
 import { useBoardStore } from "@/stores/board";
 import { useRouter } from "vue-router";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 
 const youtubeStore = useYoutubeStore();
 const store = useBoardStore();

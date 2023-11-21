@@ -25,7 +25,7 @@
         v-model="user.name"
         class="view"
       /><br />
-      <button class="btn" @click="deleteUser">회원 탈퇴</button>
+      <button class="btn" @click="deleteUser(user)">회원 탈퇴</button>
     </fieldset>
   </div>
 </template>
@@ -36,11 +36,18 @@ import axios from "axios";
 import { useAuthStore } from "../../stores/pinia";
 const user = useAuthStore().user;
 
-const deleteUser = () => {
-  axios.delete(`http://localhost:8080/user/`).then(() => {
-    router.push({ name: "Login" });
-  });
+const deleteUser = (user) => {
+  useAuthStore().deleteUser(user);
 };
 
+// Update user
+updateUser = (user) => {
+  try {
+    axios.put(`http://localhost:8080/user/${user.id}`, user);
+    alert("사용자 정보가 업데이트되었습니다.");
+  } catch (error) {
+    console.error(error);
+  }
+};
 onMounted(() => {});
 </script>

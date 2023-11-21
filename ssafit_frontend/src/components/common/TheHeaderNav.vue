@@ -6,10 +6,10 @@
         <RouterLink :to="{ name: 'boardList' }">게시판</RouterLink>
       </div>
       <div>
-        <span v-if="authStore.user">{{ authStore.user.name }} 님</span>
-        <a href="/" v-if="authStore.user" @click="logout">로그아웃</a>
+        <span v-if="isLoggedIn">{{ authStore.loginUser }} 님</span>
+        <a href="/" v-if="isLoggedIn" @click="authStore.logout()">로그아웃</a>
         <RouterLink to="/login" v-else>로그인 </RouterLink>
-        <RouterLink :to="`/user/${authStore.user.id}`" v-if="authStore.user"
+        <RouterLink :to="userProfileLink" v-if="isLoggedIn"
           >마이페이지</RouterLink
         >
         <RouterLink :to="{ name: 'Regist' }" v-else>회원가입</RouterLink>
@@ -32,6 +32,12 @@ const primaryColorBlueGreen  = ref(globalColor.primaryColorBlueGreen);
 const logout = () => {
   authStore.logout();
 };
+
+const isLoggedIn = computed(() => !!sessionStorage.getItem("access-token"));
+console.log(isLoggedIn.value);
+const userProfileLink = computed(() =>
+  isLoggedIn.value ? `/user/${authStore.loginUser}` : ""
+);
 </script>
 
 <style scoped>

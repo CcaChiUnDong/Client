@@ -68,7 +68,8 @@ const regist = () => {
         const isAvailable = check.data.available;
         if (isAvailable === true) {
           console.log(email.value);
-          emit("create-user", user);
+          createUser(user);
+          router.push({ name: "Login" });
         } else {
           alert("중복되는 이메일입니다. 다시 입력해주세요.");
         }
@@ -86,6 +87,16 @@ const regist = () => {
     alert("비밀번호는 8자리 이상이며, 특수문자를 포함해야 합니다.");
   } else {
     checkEmail();
+  }
+};
+
+// Create user
+const createUser = (user) => {
+  try {
+    axios.post(`http://localhost:8080/user/signup`, user);
+    alert("회원가입이 완료되었습니다._pinia");
+  } catch (error) {
+    console.error(error);
   }
 };
 </script>
