@@ -95,7 +95,7 @@ const store = useBoardStore();
 const user = useAuthStore().$state.user;
 const route = useRoute();
 const router = useRouter();
-console.log(store.board);
+// console.log(store.board);
 
 const isYouTubeVideo = (url) => url && url.includes("youtube.com");
 

@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div>
+  <div class="search-form">
+    <div class="form-group">
       <label>검색 기준 :</label>
       <select v-model="searchInfo.key">
         <option value="none">없음</option>
@@ -9,11 +9,11 @@
         <option value="contents">내용</option>
       </select>
     </div>
-    <div>
+    <div class="form-group">
       <label>검색 내용 :</label>
       <input type="text" v-model="searchInfo.word" />
     </div>
-    <div>
+    <div class="form-group">
       <label>정렬 기준 :</label>
       <select v-model="searchInfo.orderBy">
         <option value="none">없음</option>
@@ -23,15 +23,15 @@
         <option value="created_at">등록/수정일</option>
       </select>
     </div>
-    <div>
+    <div class="form-group">
       <label>정렬 방향 :</label>
       <select v-model="searchInfo.orderByDir">
         <option value="asc">오름차순</option>
         <option value="desc">내림차순</option>
       </select>
     </div>
-    <div>
-      <button @click="searchBoardList">검색</button>
+    <div class="form-group">
+      <CustomButton text="검색" @click="searchBoardList" />
     </div>
   </div>
 </template>
@@ -39,6 +39,10 @@
 <script setup>
 import { ref } from "vue";
 import { useBoardStore } from "@/stores/board";
+import CustomButton from "../../elements/CustomButton.vue";
+import { globalColor } from "../../global/rootColor";
+
+const colors = ref(globalColor);
 
 const store = useBoardStore();
 const searchInfo = ref({
@@ -51,18 +55,48 @@ const searchBoardList = function () {
   store.searchBoardList(searchInfo.value);
 };
 </script>
-
 <style scoped>
-div {
-  float: left;
-  text-align: center;
-  font-weight: bold;
+.search-form {
+  margin: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: v-bind(colors.primaryColorBabyBlue);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
+
+.form-group {
+  margin-bottom: 10px;
+}
+
 label {
-  width: fit-content;
-  padding: 10px;
+  display: inline-block;
+  width: 80px;
+  text-align: right;
+  margin-right: 10px;
 }
+
+input,
+select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  width: 150px;
+}
+
 button {
-  margin: 10px;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #45a049;
 }
 </style>

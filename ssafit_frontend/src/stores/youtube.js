@@ -6,14 +6,14 @@ export const useYoutubeStore = () => {
 
   const state = reactive({
     top3Videos: [],
-    isLoding : false,
+    isLoding: false,
   });
 
   // YouTube Video ID인지 확인하는 함수
   const isYouTubeVideoId = (input) => /^[a-zA-Z0-9_-]{11}$/.test(input);
 
   const fetchTop3Videos = async (videoIds) => {
-    const promises = videoIds.map(async (videoIdOrUrl,i) => {
+    const promises = videoIds.map(async (videoIdOrUrl, i) => {
       try {
         const videoId = isYouTubeVideoId(videoIdOrUrl)
           ? videoIdOrUrl
@@ -36,7 +36,6 @@ export const useYoutubeStore = () => {
           console.error(`Invalid response data for video ID: ${videoId}`);
           return null;
         }
-
       } catch (error) {
         console.error(
           `Error fetching video data for video ID: ${videoIdOrUrl}`,

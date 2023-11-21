@@ -1,8 +1,6 @@
 <template>
   <div>
-    <h4>게시글 목록</h4>
-    <hr />
-    <table>
+    <table class="custom-table">
       <tr>
         <th>번호</th>
         <th>제목</th>
@@ -12,25 +10,24 @@
         <th>조회수</th>
       </tr>
       <tr v-for="board in store.boardList" :key="board.id">
-        <td>{{ board.id }}</td>
+        <td style="text-align: center">{{ board.id }}</td>
         <td>
-          <RouterLink
-            :to="`/board/${board.id}`"
-            style="text-decoration: none"
-            >{{ board.title }}</RouterLink
+          <RouterLink :to="`/board/${board.id}`" style="text-decoration: none"
+            >{{ board.title }} ({{ board.comment_count }})</RouterLink
           >
         </td>
         <td>
-          {{ board.contents.slice(0, 15)
-          }}{{ board.contents.length > 15 ? "..." : "" }} ({{
-            board.comment_count
-          }})
+          {{ board.contents.slice(0, 25)
+          }}{{ board.contents.length > 25 ? "..." : "" }}
         </td>
-        <td>{{ board.user.name }}</td>
-        <td>{{ formatCreatedAt(board.createdAt) }}</td>
-        <td>{{ board.visited }}</td>
+        <td style="text-align: center">{{ board.user.name }}</td>
+        <td style="text-align: center">
+          {{ formatCreatedAt(board.createdAt) }}
+        </td>
+        <td style="text-align: center">{{ board.visited }}</td>
       </tr>
     </table>
+    <p>add pagination</p>
     <hr />
     <div>
       <RouterLink
@@ -48,9 +45,11 @@
 <script setup>
 import { useBoardStore } from "@/stores/board";
 import { useAuthStore } from "../../stores/pinia";
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import BoardSearchInput from "./BoardSearchInput.vue";
+import { globalColor } from "../../global/rootColor";
 
+const colors = ref(globalColor);
 const authStore = useAuthStore();
 const store = useBoardStore();
 
@@ -77,4 +76,22 @@ onMounted(() => {
 });
 </script>
 
-<style scoped></style>
+<style scoped>
+.custom-table {
+  width: 80vw;
+  border-collapse: collapse;
+  margin: 20px auto; /* Center the table */
+}
+
+.custom-table th,
+.custom-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.custom-table th {
+  background-color: v-bind(colors.primaryColorBabyBlue);
+  text-align: center;
+}
+</style>

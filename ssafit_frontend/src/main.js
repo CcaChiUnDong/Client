@@ -11,7 +11,7 @@ app.use(pinia);
 app.use(router);
 
 const authStore = useAuthStore();
-// axios.defaults.baseURL = "http://localhost:8080";
-// axios.defaults.withCredentials = true;
+axios.defaults.baseURL = "http://localhost:8080";
+axios.defaults.withCredentials = true;
 
 app.mount("#app");

@@ -12,7 +12,7 @@ export const useBoardStore = defineStore("board", () => {
   const boardList = ref([]);
   const getBoardList = function () {
     axios.get(REST_BOARD_API).then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       boardList.value = response.data;
     });
   };
@@ -22,7 +22,7 @@ export const useBoardStore = defineStore("board", () => {
   const getTop3BoardList = async function () {
     top3BoardList.value = (await axios.get(`${REST_BOARD_API}/top3`)).data;
     let count = 0;
-    console.log(top3BoardList.value);
+    // console.log(top3BoardList.value);
     top3BoardList.value.forEach(async (v, i) => {
       const videoId = isYouTubeVideoId(v.url)
         ? v.url
@@ -48,7 +48,7 @@ export const useBoardStore = defineStore("board", () => {
       });
     });
 
-    console.log(top3BoardList.value);
+    // console.log(top3BoardList.value);
   };
 
   const extractYouTubeVideoId = (url) => {

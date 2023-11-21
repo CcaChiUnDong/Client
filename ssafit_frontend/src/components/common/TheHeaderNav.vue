@@ -32,8 +32,8 @@ const primaryColorBlueGreen = ref(globalColor.primaryColorBlueGreen);
 
 const userString = sessionStorage.getItem("loginUser");
 const user = userString ? JSON.parse(userString) : null;
-const isLoggedIn = computed(() => !!user);
-console.log(user);
+
+const isLoggedIn = computed(() => !!sessionStorage.getItem("accessToken"));
 
 const logoutUser = () => {
   useAuthStore().logout();

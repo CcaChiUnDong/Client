@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <h2>회원 정보</h2>
     <fieldset class="text-center">
+      <h2>회원 정보</h2>
       <label for="email">이메일</label>
       <input
         readonly
@@ -10,13 +10,13 @@
         v-model="user.email"
         class="view"
       /><br />
-      <label for="password">비밀번호</label>
+      <!-- <label for="password">비밀번호</label>
       <input
         type="password"
         id="password"
         v-model="user.password"
         class="view"
-      /><br />
+      /><br /> -->
       <label for="name">이름</label>
       <input
         readonly
@@ -39,16 +39,19 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import CustomButton from "../../elements/CustomButton.vue";
 import { useAuthStore } from "@/stores/pinia";
+import { useRouter } from "vue-router";
 
 const userString = sessionStorage.getItem("loginUser");
 const user = userString ? JSON.parse(userString) : null;
+const router = useRouter();
 
 // Delete user
 const deleteUser = (user) => {
   try {
     axios.delete(`http://localhost:8080/user/${user.id}`);
     alert("사용자 정보가 삭제되었습니다.");
-    this.logout();
+    useAuthStore().logout();
+    router.push({ name: "home" });
   } catch (error) {
     console.error(error);
   }

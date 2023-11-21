@@ -4,6 +4,7 @@ import axios from "axios";
 export const useAuthStore = defineStore("auth", {
   state: () => ({
     user: null,
+    token: null,
   }),
 
   actions: {
@@ -13,7 +14,18 @@ export const useAuthStore = defineStore("auth", {
         this.user = JSON.parse(savedUser) || null;
       }
     },
-
+    // loadUser() {
+    //   axios
+    //     .get("http://localhost:8080/user/", {
+    //       headers: {
+    //         Authorization: `Bearer ${this.token}`,
+    //       },
+    //     })
+    //     .then((res) => {
+    //       console.log(res.data);
+    //     })
+    //     .catch((err) => console.log(err.response));
+    // },
     setUser(user) {
       this.user = user;
       sessionStorage.setItem("loginUser", JSON.stringify(user));
@@ -23,6 +35,7 @@ export const useAuthStore = defineStore("auth", {
     logout() {
       this.user = null;
       sessionStorage.removeItem("loginUser");
+      sessionStorage.removeItem("accessToken");
     },
 
     // Login user
@@ -33,17 +46,14 @@ export const useAuthStore = defineStore("auth", {
           user
         );
 
-        const matchedUser = response.data;
-
-        if (matchedUser) {
-          this.setUser(matchedUser);
-          alert("로그인 성공_pinia");
-        } else {
-          alert("로그인 실패_pinia");
-        }
+        this.token = response.headers.get("Authorization");
+        console.log(this.token);
+        sessionStorage.setItem("accessToken", this.token);
+        console.log(response.data);
+        this.setUser(response.data);
       } catch (error) {
-        console.error(error);
-        alert("로그인 실패: 서버 에러_pinia");
+        console.log(error);
+        alert("로그인 실패");
       }
     },
   },

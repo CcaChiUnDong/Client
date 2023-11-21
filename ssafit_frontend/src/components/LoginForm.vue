@@ -1,15 +1,14 @@
 <template>
   <div class="container">
-    <h2>로그인</h2>
     <fieldset class="center">
       <label for="email">이메일</label>
-      <input type="email" id="email" v-model="email" class="view" /><br />
+      <input type="email" id="email" v-model="email" class="new-view" /><br />
       <label for="password">비밀번호</label>
       <input
         type="password"
         id="password"
         v-model="password"
-        class="view"
+        class="new-view"
       /><br />
       <CustomButton @click="login" text="로그인"></CustomButton>
     </fieldset>
@@ -53,11 +52,13 @@ const login = () => {
   position: absolute;
   top: 50%;
   left: 50%;
+  border: 3px solid v-bind(primaryColorBabyBlue);
+  border-radius: 7px;
   transform: translate(-50%, -50%);
   width: fit-content;
   height: fit-content;
 }
-.view {
+.new-view {
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;

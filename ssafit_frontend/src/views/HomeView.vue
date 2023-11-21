@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2>HomeView</h2>
+  <div class="my-container">
+    <h1>SSAFIT</h1>
 
     <RouterView />
   </div>
@@ -8,4 +8,10 @@
 
 <script setup></script>
 
-<style scoped></style>
+<style scoped>
+.my-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+</style>

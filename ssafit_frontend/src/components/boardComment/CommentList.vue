@@ -12,7 +12,7 @@
         <td>{{ formatCreatedAt(comment.create_at) }}</td>
         <button
           class="btn-sm"
-          v-if="user.id && comment.user.id == user.id"
+          v-if="isLoggedIn && comment.user.id == user.id"
           @click="deleteComment(comment.id)"
         >
           삭제
@@ -34,12 +34,13 @@ const REST_COMMENT_API = `http://localhost:8080/comment`;
 
 const commentList = ref([]);
 const user = useAuthStore().$state.user;
+const isLoggedIn = computed(() => !!user);
 
 const getCommentList = function () {
   axios
     .get(`${REST_COMMENT_API}/${route.params.id}`)
     .then((response) => {
-      console.log(response.data);
+      // console.log(response.data);
       commentList.value = response.data;
     })
     .catch((err) => {

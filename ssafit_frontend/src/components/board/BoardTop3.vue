@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h2>상위 3개 동영상</h2>
+  <div class="video-container">
+    <h2>인기 동영상</h2>
     <div
       v-for="(board, index) in store.top3BoardList"
       :key="board.id"
@@ -9,10 +9,7 @@
     >
       <h3>{{ board.title }}</h3>
       <p>{{ board.videoTitle }}</p>
-      <img
-        :src="board.thumbnail"
-        alt="videoThumbnail"
-      />
+      <img :src="board.thumbnail" alt="videoThumbnail" />
     </div>
   </div>
 </template>
@@ -25,7 +22,6 @@ import { ref, onMounted, watch } from "vue";
 
 const store = useBoardStore();
 const router = useRouter();
-console.log( store.top3BoardList)
 onMounted(async () => {
   await store.getTop3BoardList();
 });
@@ -37,8 +33,14 @@ const goToBoardDetail = (boardId) => {
 </script>
 
 <style scoped>
+.video-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .video-card {
   display: inline-block;
+  width: 80%;
   margin: 10px;
   padding: 10px;
   border: 1px solid #ddd;
