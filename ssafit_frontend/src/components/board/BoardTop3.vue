@@ -2,15 +2,15 @@
   <div>
     <h2>상위 3개 동영상</h2>
     <div
-      v-for="(board, index) in top3BoardList"
+      v-for="(board, index) in store.top3BoardList"
       :key="board.id"
       class="video-card"
       @click="goToBoardDetail(board.id)"
     >
       <h3>{{ board.title }}</h3>
-      <p>{{ youtubeStore.state.top3Videos[index]?.title }}</p>
+      <p>{{ board.videoTitle }}</p>
       <img
-        :src="youtubeStore.state.top3Videos[index].thumbnail"
+        :src="board.thumbnail"
         alt="videoThumbnail"
       />
     </div>
@@ -26,13 +26,9 @@ import { ref, onMounted, watch } from "vue";
 const youtubeStore = useYoutubeStore();
 const store = useBoardStore();
 const router = useRouter();
-const top3BoardList = ref([]);
-
+console.log( store.top3BoardList)
 onMounted(async () => {
   await store.getTop3BoardList();
-  const videoIds = store.top3BoardList.map((item) => item.url);
-  await youtubeStore.getTop3Videos(videoIds);
-  top3BoardList.value = store.top3BoardList;
 });
 
 const goToBoardDetail = (boardId) => {

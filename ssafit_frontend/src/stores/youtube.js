@@ -6,13 +6,14 @@ export const useYoutubeStore = () => {
 
   const state = reactive({
     top3Videos: [],
+    isLoding : false,
   });
 
   // YouTube Video ID인지 확인하는 함수
   const isYouTubeVideoId = (input) => /^[a-zA-Z0-9_-]{11}$/.test(input);
 
   const fetchTop3Videos = async (videoIds) => {
-    const promises = videoIds.map(async (videoIdOrUrl) => {
+    const promises = videoIds.map(async (videoIdOrUrl,i) => {
       try {
         const videoId = isYouTubeVideoId(videoIdOrUrl)
           ? videoIdOrUrl
@@ -26,8 +27,8 @@ export const useYoutubeStore = () => {
         if (data.items && data.items.length > 0 && data.items[0].snippet) {
           const videoInfo = data.items[0].snippet;
           return {
-            id: videoId,
-            title: videoInfo.title,
+            videoId: videoId,
+            videoTitle: videoInfo.title,
             description: videoInfo.description,
             thumbnail: videoInfo.thumbnails.default.url,
           };
@@ -35,6 +36,7 @@ export const useYoutubeStore = () => {
           console.error(`Invalid response data for video ID: ${videoId}`);
           return null;
         }
+
       } catch (error) {
         console.error(
           `Error fetching video data for video ID: ${videoIdOrUrl}`,
@@ -43,10 +45,10 @@ export const useYoutubeStore = () => {
         return null;
       }
     });
-
     state.top3Videos = (await Promise.all(promises)).filter(
       (video) => video !== null
     );
+    state.isLoding = true;
   };
 
   // YouTube Video URL에서 Video ID를 추출하는 함수

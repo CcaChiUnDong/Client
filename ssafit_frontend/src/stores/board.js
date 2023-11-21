@@ -3,8 +3,10 @@ import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
 import { useAuthStore } from "./pinia";
+import config from "@/apiKey";
 
 const REST_BOARD_API = `http://localhost:8080/board`;
+const apiKey = config.apiKey;
 
 export const useBoardStore = defineStore("board", () => {
   //게시글 전체
@@ -18,12 +20,47 @@ export const useBoardStore = defineStore("board", () => {
 
   //게시글 조회수 상위 3개
   const top3BoardList = ref([]);
-  const getTop3BoardList = function () {
-    axios.get(`${REST_BOARD_API}/top3`).then((response) => {
-      console.log(response.data);
-      top3BoardList.value = response.data;
-    });
+  const getTop3BoardList = async function () {
+    top3BoardList.value = (await axios.get(`${REST_BOARD_API}/top3`)).data;
+    let count = 0;
+    console.log(top3BoardList.value)
+    top3BoardList.value.forEach(async (v,i)=>{
+        const videoId = isYouTubeVideoId(v.url)
+          ? v.url
+          : extractYouTubeVideoId(v.url);
+
+        const response = fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`
+        ).then(async(res)=>{
+
+        const data = await res.json();
+        if (data.items && data.items.length > 0 && data.items[0].snippet) {
+          const videoInfo = data.items[0].snippet;
+          top3BoardList.value[i] = {...top3BoardList.value[i],
+            videoId: videoId,
+            videoTitle: videoInfo.title,
+            description: videoInfo.description,
+            thumbnail: videoInfo.thumbnails.default.url,
+          };
+        } else {
+          console.error(`Invalid response data for video ID: ${videoId}`);
+          return null;
+        }
+        });
+
+    })
+
+    console.log(top3BoardList.value);
   };
+
+  const extractYouTubeVideoId = (url) => {
+    const videoIdMatch = url.match(
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+    );
+
+    return videoIdMatch ? videoIdMatch[1] : null;
+  };
+  const isYouTubeVideoId = (input) => /^[a-zA-Z0-9_-]{11}$/.test(input);
 
   //게시글 한개
   const board = ref({ user: {} });
