@@ -1,16 +1,12 @@
 <template>
   <div class="totalBody">
-    <THeHeaderNav />
+    <TheHeaderNav />
     <RouterView />
   </div>
 </template>
 
 <script setup>
 import TheHeaderNav from "./components/common/TheHeaderNav.vue";
-import { ref, onMounted } from "vue";
-import axios from "axios";
-import { useRouter } from "vue-router";
-import { useAuthStore } from "./stores/pinia";
 </script>
 
 <style>

@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref,computed } from "vue";
 import { useAuthStore } from "@/stores/pinia";
 import { useRouter } from "vue-router";
 import { globalColor } from "../../global/rootColor";

@@ -19,7 +19,6 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/pinia";
-import { useRouter } from "vue-router";
 import CustomButton from "../elements/CustomButton.vue";
 import router from "../router";
 
