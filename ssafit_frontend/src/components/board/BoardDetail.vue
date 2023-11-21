@@ -61,10 +61,10 @@
         v-model="formattedCreatedAt"
         class="view"
       /><br />
-      <div style="float: right">
+      <div v-if="store.board.userId && user" style="float: right">
         <RouterLink
-          :to="`/board/${store.board.id}/update`"
           v-if="store.board.userId == user.id"
+          :to="`/board/${store.board.id}/update`"
           >수정</RouterLink
         >
         <button
@@ -95,7 +95,8 @@ const store = useBoardStore();
 const user = useAuthStore().user;
 const route = useRoute();
 const router = useRouter();
-
+console.log(store.board);
+ 
 const isYouTubeVideo = (url) => url && url.includes("youtube.com");
 
 const getYouTubeEmbedUrl = (url) => {
@@ -121,7 +122,7 @@ const formattedCreatedAt = computed(() => {
 });
 
 onMounted(() => {
-  store.getBoard(route.params.id);
+    store.getBoard(route.params.id);
 });
 
 const deleteBoard = () => {

@@ -23,7 +23,6 @@ import { useBoardStore } from "@/stores/board";
 import { useRouter } from "vue-router";
 import { ref, onMounted, watch } from "vue";
 
-const youtubeStore = useYoutubeStore();
 const store = useBoardStore();
 const router = useRouter();
 console.log( store.top3BoardList)

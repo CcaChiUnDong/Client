@@ -64,11 +64,10 @@ export const useBoardStore = defineStore("board", () => {
 
   //게시글 한개
   const board = ref({ user: {} });
-  const getBoard = function (id) {
-    axios.get(`${REST_BOARD_API}/${id}`).then((response) => {
-      console.log(response.data);
-      board.value = response.data;
-    });
+  const getBoard = async function (id) {
+    const response = await axios.get(`${REST_BOARD_API}/${id}`);
+    board.value = {...response.data};
+
   };
 
   //게시글 등록
