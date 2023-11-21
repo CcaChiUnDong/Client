@@ -2,7 +2,6 @@ import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 import router from "@/router";
 import axios from "axios";
-import { useAuthStore } from "./pinia";
 import config from "@/apiKey";
 
 const REST_BOARD_API = `http://localhost:8080/board`;
@@ -23,20 +22,20 @@ export const useBoardStore = defineStore("board", () => {
   const getTop3BoardList = async function () {
     top3BoardList.value = (await axios.get(`${REST_BOARD_API}/top3`)).data;
     let count = 0;
-    console.log(top3BoardList.value)
-    top3BoardList.value.forEach(async (v,i)=>{
-        const videoId = isYouTubeVideoId(v.url)
-          ? v.url
-          : extractYouTubeVideoId(v.url);
+    console.log(top3BoardList.value);
+    top3BoardList.value.forEach(async (v, i) => {
+      const videoId = isYouTubeVideoId(v.url)
+        ? v.url
+        : extractYouTubeVideoId(v.url);
 
-        const response = fetch(
-          `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`
-        ).then(async(res)=>{
-
+      const response = fetch(
+        `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`
+      ).then(async (res) => {
         const data = await res.json();
         if (data.items && data.items.length > 0 && data.items[0].snippet) {
           const videoInfo = data.items[0].snippet;
-          top3BoardList.value[i] = {...top3BoardList.value[i],
+          top3BoardList.value[i] = {
+            ...top3BoardList.value[i],
             videoId: videoId,
             videoTitle: videoInfo.title,
             description: videoInfo.description,
@@ -46,9 +45,8 @@ export const useBoardStore = defineStore("board", () => {
           console.error(`Invalid response data for video ID: ${videoId}`);
           return null;
         }
-        });
-
-    })
+      });
+    });
 
     console.log(top3BoardList.value);
   };
@@ -66,8 +64,7 @@ export const useBoardStore = defineStore("board", () => {
   const board = ref({ user: {} });
   const getBoard = async function (id) {
     const response = await axios.get(`${REST_BOARD_API}/${id}`);
-    board.value = {...response.data};
-
+    board.value = { ...response.data };
   };
 
   //게시글 등록

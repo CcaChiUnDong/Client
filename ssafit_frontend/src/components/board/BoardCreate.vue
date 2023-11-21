@@ -40,7 +40,6 @@
 <script setup>
 import { ref } from "vue";
 import { useBoardStore } from "@/stores/board";
-import { useAuthStore } from "../../stores/pinia";
 
 const user = useAuthStore().user;
 const store = useBoardStore();

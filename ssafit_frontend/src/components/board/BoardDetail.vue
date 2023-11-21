@@ -92,11 +92,11 @@ import CommentList from "../boardComment/CommentList.vue";
 import axios from "axios";
 
 const store = useBoardStore();
-const user = useAuthStore().user;
+const user = useAuthStore().$state.user;
 const route = useRoute();
 const router = useRouter();
 console.log(store.board);
- 
+
 const isYouTubeVideo = (url) => url && url.includes("youtube.com");
 
 const getYouTubeEmbedUrl = (url) => {
@@ -122,7 +122,7 @@ const formattedCreatedAt = computed(() => {
 });
 
 onMounted(() => {
-    store.getBoard(route.params.id);
+  store.getBoard(route.params.id);
 });
 
 const deleteBoard = () => {

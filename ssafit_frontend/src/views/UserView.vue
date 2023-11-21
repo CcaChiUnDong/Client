@@ -1,35 +1,16 @@
 <template>
   <div>
-    <RouterView
-      :users="authStore.users"
-      @create-user="createUser"
-      @update-user="updateUser"
-      @delete-user="deleteUser"
-    />
+    <RouterView />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "@/stores/pinia";
 import { globalColor } from "../global/rootColor";
-const colors = ref(globalColor)
-const authStore = useAuthStore();
+const primaryColorBabyBlue = ref(globalColor.primaryColorBabyBlue);
+const primaryColorTiffanyBlue = ref(globalColor.primaryColorTiffanyBlue);
 const router = useRouter();
-
-const createUser = (user) => {
-  authStore.createUser(user);
-  router.push({ name: "Login" });
-};
-
-const updateUser = (user) => {
-  authStore.updateUser(user);
-};
-
-const deleteUser = (user) => {
-  authStore.deleteUser(user);
-};
 </script>
 
 <style>
@@ -41,14 +22,15 @@ const deleteUser = (user) => {
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
-  border: 1px solid v-bind(colors.primaryColorBabyBlue);
+  border: 1px solid v-bind(primaryColorBabyBlue);
   border-radius: 4px;
   box-sizing: border-box;
   color: #787878;
   font-size: medium;
-}:focus{
-  border: 1px solid v-bind(colors.primaryColorTiffanyBlue);
-  outline : none;
+}
+:focus {
+  border: 1px solid v-bind(primaryColorTiffanyBlue);
+  outline: none;
 }
 
 label {

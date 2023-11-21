@@ -11,37 +11,38 @@
         v-model="password"
         class="view"
       /><br />
-      <CustomButton @click="loginUser" text="로그인" ></CustomButton>
+      <CustomButton @click="login" text="로그인"></CustomButton>
     </fieldset>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { useAuthStore } from "@/stores/pinia";
 import CustomButton from "../elements/CustomButton.vue";
-import router from "../router";
+import { useAuthStore } from "../stores/pinia";
+import { useRouter } from "vue-router";
+import { globalColor } from "../global/rootColor";
+
+const primaryColorBabyBlue = ref(globalColor.primaryColorBabyBlue);
 
 const email = ref("");
 const password = ref("");
 
-const loginUser = () => {
-  // 아이디와 패스워드 입력 여부 확인
-  if (email.value && password.value) {
-    const user = {
-      email: email.value,
-      password: password.value,
-    };
-    useAuthStore.loginUser(user);
-    router.push({ name: "home" });
-  } else {
-    alert("아이디 또는 비밀번호가 입력되지 않았습니다.");
-  }
+const router = useRouter();
+const authStore = useAuthStore();
+
+const login = () => {
+  const user = {
+    email: email.value,
+    password: password.value,
+  };
+  authStore.loginUser(user);
+  router.push({ name: "home" });
 };
 </script>
 
 <style>
-.container{
+.container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -55,5 +56,15 @@ const loginUser = () => {
   transform: translate(-50%, -50%);
   width: fit-content;
   height: fit-content;
+}
+.view {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid v-bind(primaryColorBabyBlue);
+  border-radius: 4px;
+  box-sizing: border-box;
+  color: #787878;
+  font-size: medium;
 }
 </style>

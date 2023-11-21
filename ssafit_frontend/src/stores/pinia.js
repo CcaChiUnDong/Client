@@ -3,55 +3,48 @@ import axios from "axios";
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    token: null,
-    id: null,
-    name: null,
-    email: null,
+    user: null,
   }),
-  getters: {
-    token: (state) => state.token,
-    id: (state) => state.id,
-    email: (state) => state.email,
-    nickname: (state) => state.name,
-  },
+
   actions: {
-    async login(user) {
-      try {
-        const params = {
-          email: user.email,
-          password: user.password,
-        };
-
-        const response = await axios.post(
-          "http://localhost:8080/login",
-          JSON.stringify(params),
-          {
-            headers: { "content-type": "application/json" },
-          }
-        );
-
-        this.loginAction(response);
-        router.push({ name: "home" });
-      } catch (error) {
-        console.error("Error during login:", error);
-        alert("로그인 요청에 문제가 발생했습니다.");
+    loadUser() {
+      const savedUser = sessionStorage.getItem("loginUser");
+      if (savedUser) {
+        this.user = JSON.parse(savedUser) || null;
       }
     },
+
+    setUser(user) {
+      this.user = user;
+      sessionStorage.setItem("loginUser", JSON.stringify(user));
+    },
+
+    // Logout user
     logout() {
-      this.logoutAction();
-      router.push({ name: "login" });
+      this.user = null;
+      sessionStorage.removeItem("loginUser");
     },
-    loginAction(item) {
-      this.token = item.headers["access-token"];
-      this.id = item.data.id;
-      this.email = item.data.email;
-      this.name = item.data.name;
-    },
-    logoutAction() {
-      this.token = null;
-      this.id = null;
-      this.email = null;
-      this.name = null;
+
+    // Login user
+    async loginUser(user) {
+      try {
+        const response = await axios.post(
+          `http://localhost:8080/user/login`,
+          user
+        );
+
+        const matchedUser = response.data;
+
+        if (matchedUser) {
+          this.setUser(matchedUser);
+          alert("로그인 성공_pinia");
+        } else {
+          alert("로그인 실패_pinia");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("로그인 실패: 서버 에러_pinia");
+      }
     },
   },
 });

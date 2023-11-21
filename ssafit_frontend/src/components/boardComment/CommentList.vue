@@ -12,7 +12,7 @@
         <td>{{ formatCreatedAt(comment.create_at) }}</td>
         <button
           class="btn-sm"
-          v-if="comment.user.id == user.id"
+          v-if="user.id && comment.user.id == user.id"
           @click="deleteComment(comment.id)"
         >
           삭제
@@ -33,7 +33,7 @@ const router = useRouter();
 const REST_COMMENT_API = `http://localhost:8080/comment`;
 
 const commentList = ref([]);
-const user = useAuthStore().user;
+const user = useAuthStore().$state.user;
 
 const getCommentList = function () {
   axios
