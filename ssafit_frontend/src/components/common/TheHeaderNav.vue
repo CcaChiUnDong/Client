@@ -6,10 +6,16 @@
         <RouterLink :to="{ name: 'boardList' }">게시판</RouterLink>
       </div>
       <div>
-        <span v-if="userState.$state.isLogin">{{ userState.$state.user.name }} 님</span>
-        <a href="/" v-if="userState.$state.isLogin" @click="logoutUser">로그아웃</a>
+        <span v-if="userState.$state.isLogin"
+          >{{ userState.$state.user.name }} 님</span
+        >
+        <a href="/" v-if="userState.$state.isLogin" @click="logoutUser"
+          >로그아웃</a
+        >
         <RouterLink to="/login" v-else>로그인 </RouterLink>
-        <RouterLink :to="`/user/${userState.$state.user.id}`" v-if="userState.$state.isLogin"
+        <RouterLink
+          :to="`/user/${userState.$state.user.id}`"
+          v-if="userState.$state.isLogin"
           >마이페이지</RouterLink
         >
         <RouterLink :to="{ name: 'Regist' }" v-else>회원가입</RouterLink>
@@ -38,8 +44,8 @@ const logoutUser = () => {
 };
 
 onMounted(() => {
-  const token = getCookie('ccachiToken');
-  if(token){
+  const token = getCookie("ccachiToken");
+  if (token) {
     useAuthStore().loadUser();
   }
 });

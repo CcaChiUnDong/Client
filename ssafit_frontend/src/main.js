@@ -10,7 +10,6 @@ const pinia = createPinia();
 app.use(pinia);
 app.use(router);
 
-const authStore = useAuthStore();
 axios.defaults.baseURL = "http://localhost:8080";
 axios.defaults.withCredentials = true;
 

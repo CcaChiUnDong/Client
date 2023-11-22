@@ -12,6 +12,15 @@ export const useYoutubeStore = () => {
   // YouTube Video ID인지 확인하는 함수
   const isYouTubeVideoId = (input) => /^[a-zA-Z0-9_-]{11}$/.test(input);
 
+  // YouTube Video URL에서 Video ID를 추출하는 함수
+  const extractYouTubeVideoId = (url) => {
+    const videoIdMatch = url.match(
+      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+    );
+
+    return videoIdMatch ? videoIdMatch[1] : null;
+  };
+
   const fetchTop3Videos = async (videoIds) => {
     const promises = videoIds.map(async (videoIdOrUrl, i) => {
       try {
@@ -48,15 +57,6 @@ export const useYoutubeStore = () => {
       (video) => video !== null
     );
     state.isLoding = true;
-  };
-
-  // YouTube Video URL에서 Video ID를 추출하는 함수
-  const extractYouTubeVideoId = (url) => {
-    const videoIdMatch = url.match(
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-    );
-
-    return videoIdMatch ? videoIdMatch[1] : null;
   };
 
   const fetchVideoById = async (videoId) => {

@@ -27,7 +27,19 @@
         <td style="text-align: center">{{ board.visited }}</td>
       </tr>
     </table>
-    <p>add pagination</p>
+    <div>
+      <CustomButton
+        @click="changePage(-1)"
+        v-if="currentPage > 1"
+        text="이전"
+      />
+      <span>{{ currentPage }} 페이지</span>
+      <CustomButton
+        @click="changePage(1)"
+        v-if="currentPage * pageSize < store.totalBoard"
+        text="다음"
+      />
+    </div>
     <hr />
     <div>
       <RouterLink
@@ -38,7 +50,10 @@
       >
     </div>
     <br />
-    <BoardSearchInput />
+    <BoardSearchInput
+      :searchCondition="store.searchCondition"
+      @search="performSearch"
+    />
   </div>
 </template>
 
@@ -48,6 +63,8 @@ import { useAuthStore } from "../../stores/pinia";
 import { ref, onMounted } from "vue";
 import BoardSearchInput from "./BoardSearchInput.vue";
 import { globalColor } from "../../global/rootColor";
+import axios from "axios";
+import CustomButton from "../../elements/CustomButton.vue";
 
 const colors = ref(globalColor);
 const authStore = useAuthStore();
@@ -70,9 +87,36 @@ const formatCreatedAt = (createAt) => {
     return `${minutes}분 전`;
   }
 };
+let currentPage = store.currentPage;
+const pageSize = 10; // 페이지당 아이템 수
 
+// 검색 및 페이징 로직
+const performSearch = () => {
+  store.setPage("1"); // 검색이 새로 시작되면 페이지를 1로 초기화
+  fetchBoardList();
+};
+
+const changePage = (delta) => {
+  store.setPage(currentPage + delta);
+  currentPage = currentPage + delta;
+  fetchBoardList();
+};
+
+const fetchBoardList = () => {
+  const objectStartNum = (currentPage - 1) * pageSize;
+  const objectEndNum = 10;
+  const newSearchCondition = {
+    ...store.searchCondition,
+  };
+  newSearchCondition.objectStartNum = objectStartNum;
+  store.setCondition(newSearchCondition);
+  store.searchBoardList(); // store의 searchBoardList 액션 호출
+};
+
+// 컴포넌트가 마운트되면 초기 검색 수행
 onMounted(() => {
-  store.searchBoardList();
+  fetchBoardList();
+  store.setTotalPage();
 });
 </script>
 

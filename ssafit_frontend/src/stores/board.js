@@ -1,40 +1,75 @@
-import { ref, computed } from "vue";
+import { ref } from "vue";
 import { defineStore } from "pinia";
-import router from "@/router";
+import { useAuthStore } from "./pinia";
+import { useYoutubeStore } from "./youtube";
 import axios from "axios";
+import router from "@/router";
 import config from "@/apiKey";
 
 const REST_BOARD_API = `http://localhost:8080/board`;
 const apiKey = config.apiKey;
 
-export const useBoardStore = defineStore("board", () => {
-  //게시글 전체
-  const boardList = ref([]);
-  const getBoardList = function () {
-    axios.get(REST_BOARD_API).then((response) => {
-      boardList.value = response.data;
-    });
-  };
+export const useBoardStore = defineStore({
+  id: "board",
+  state: () => ({
+    boardList: [],
+    top3BoardList: [],
+    board: { user: {} },
+    searchCondition: {
+      key: "none",
+      word: "",
+      orderBy: "none",
+      orderByDir: "asc",
+      objectStartNum: "",
+      objectEndNum: "10",
+    },
+    currentPage: 1,
+    totalBoard: 1,
+  }),
 
-  //게시글 조회수 상위 3개
-  const top3BoardList = ref([]);
-  const getTop3BoardList = async function () {
-    top3BoardList.value = (await axios.get(`${REST_BOARD_API}/top3`)).data;
-    let count = 0;
-    // console.log(top3BoardList.value);
-    top3BoardList.value.forEach(async (v, i) => {
-      const videoId = isYouTubeVideoId(v.url)
-        ? v.url
-        : extractYouTubeVideoId(v.url);
+  actions: {
+    async getBoardList() {
+      const response = await axios.get(REST_BOARD_API);
+      this.boardList = response.data;
+    },
 
-      const response = fetch(
-        `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`
-      ).then(async (res) => {
-        const data = await res.json();
+    setPage(delta) {
+      this.currentPage = delta;
+    },
+
+    async setTotalPage() {
+      //검색 조건을 끼워넣은 count 반환하도록 수정
+      const response = await axios.get(`${REST_BOARD_API}/count`);
+      this.totalBoard = response.data;
+      console.log(this.totalBoard);
+    },
+
+    async getTop3BoardList() {
+      const extractYouTubeVideoId = (url) => {
+        const videoIdMatch = url.match(
+          /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
+        );
+        return videoIdMatch ? videoIdMatch[1] : null;
+      };
+
+      const isYouTubeVideoId = (input) => /^[a-zA-Z0-9_-]{11}$/.test(input);
+
+      const response = await axios.get(`${REST_BOARD_API}/top3`);
+      this.top3BoardList = response.data;
+      this.top3BoardList.forEach(async (v, i) => {
+        const videoId = isYouTubeVideoId(v.url)
+          ? v.url
+          : extractYouTubeVideoId(v.url);
+
+        const response = await fetch(
+          `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${apiKey}`
+        );
+        const data = await response.json();
+
         if (data.items && data.items.length > 0 && data.items[0].snippet) {
           const videoInfo = data.items[0].snippet;
-          top3BoardList.value[i] = {
-            ...top3BoardList.value[i],
+          this.top3BoardList[i] = {
+            ...this.top3BoardList[i],
             videoId: videoId,
             videoTitle: videoInfo.title,
             description: videoInfo.description,
@@ -42,98 +77,74 @@ export const useBoardStore = defineStore("board", () => {
           };
         } else {
           console.error(`Invalid response data for video ID: ${videoId}`);
-          return null;
         }
       });
-    });
+    },
 
-    // console.log(top3BoardList.value);
-  };
+    async getBoard(id) {
+      const response = await axios.get(`${REST_BOARD_API}/${id}`);
+      this.board = { ...response.data };
+    },
 
-  const extractYouTubeVideoId = (url) => {
-    const videoIdMatch = url.match(
-      /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/
-    );
+    async createBoard(board) {
+      const currentUser = useAuthStore().user;
+      const boardWithUser = {
+        ...board,
+        user_id: currentUser.id,
+      };
 
-    return videoIdMatch ? videoIdMatch[1] : null;
-  };
-  const isYouTubeVideoId = (input) => /^[a-zA-Z0-9_-]{11}$/.test(input);
+      try {
+        await axios.post(`${REST_BOARD_API}`, boardWithUser, {
+          headers: { "Content-Type": "application/json" },
+        });
 
-  //게시글 한개
-  const board = ref({ user: {} });
-  const getBoard = async function (id) {
-    const response = await axios.get(`${REST_BOARD_API}/${id}`);
-    board.value = { ...response.data };
-  };
-
-  //게시글 등록
-  const createBoard = function (board) {
-    const currentUser = useAuthStore().user;
-    console.log(currentUser.id);
-    const boardWithUser = {
-      ...board,
-      user_id: currentUser.id,
-    };
-
-    axios({
-      url: `${REST_BOARD_API}`,
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: boardWithUser,
-    })
-      .then(() => {
-        console.log(boardWithUser);
         router.push({ name: "boardList" });
-      })
-      .catch((err) => {
-        console.log(boardWithUser);
+      } catch (err) {
         console.log(err);
-      });
-  };
+      }
+    },
 
-  const updateBoard = function (id, board) {
-    const newBoard = {
-      id: board.id,
-      user_id: board.userId,
-      title: board.title,
-      contents: board.contents,
-      url: board.url,
-    };
-    axios({
-      url: `${REST_BOARD_API}/${id}`,
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: newBoard,
-    })
-      .then(() => {
+    async updateBoard(id, board) {
+      const newBoard = {
+        id: board.id,
+        user_id: board.userId,
+        title: board.title,
+        contents: board.contents,
+        url: board.url,
+      };
+
+      try {
+        await axios.patch(`${REST_BOARD_API}/${id}`, newBoard, {
+          headers: { "Content-Type": "application/json" },
+        });
+
         router.push({ name: "boardList" });
-      })
-      .catch((err) => {
+      } catch (err) {
         console.log(err);
-      });
-  };
+      }
+    },
 
-  const searchBoardList = function (searchCondition = {key: 'none', word: '', orderBy: 'none', orderByDir: 'asc'}) {
-    axios.post(`${REST_BOARD_API}/search`, searchCondition).then((res) => {
-      boardList.value = res.data;
-      console.log(searchCondition);
-      console.log(boardList.value);
-    });
-  };
+    setCondition(newSearchCondition) {
+      this.searchCondition = newSearchCondition;
+      // console.log(this.searchCondition);
+    },
 
-  return {
-    boardList,
-    getBoardList,
-    top3BoardList,
-    getTop3BoardList,
-    board,
-    getBoard,
-    createBoard,
-    updateBoard,
-    searchBoardList,
-  };
+    async searchBoardList() {
+      // console.log(this.searchCondition);
+      this.setTotalPage();
+      try {
+        const response = await axios.post(
+          `${REST_BOARD_API}/search`,
+          this.searchCondition,
+          {
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+
+        this.boardList = response.data;
+      } catch (err) {
+        console.log(err);
+      }
+    },
+  },
 });

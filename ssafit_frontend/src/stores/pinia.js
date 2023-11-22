@@ -3,32 +3,33 @@ import axios from "axios";
 import instance from "../global/request";
 import { deleteCookie, setCookie } from "../global/cookie";
 
-
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    isLogin : false,
-    user: {name : null, id :null},
+    isLogin: false,
+    user: { name: null, id: null },
   }),
 
   actions: {
+    // loadUser() {
+    //   const savedUser = sessionStorage.getItem("loginUser");
+    //   if (savedUser) {
+    //     this.user = JSON.parse(savedUser) || null;
+    //   }
+    // },
     loadUser() {
-      
-      instance.get("/user",{
-        
-      }).then((res)=>{
+      instance.get("/user", {}).then((res) => {
         this.setUser(res.data);
       });
-
     },
 
     setUser(user) {
-      this.user = {...user};
+      this.user = { ...user };
       this.isLogin = true;
     },
 
     // Logout user
     logout() {
-      this.user = {name : null, id :null};
+      this.user = { name: null, id: null };
       this.isLogin = false;
       deleteCookie("ccachiToken");
     },
@@ -42,7 +43,7 @@ export const useAuthStore = defineStore("auth", {
         );
 
         const token = response.headers.get("Authorization");
-        setCookie("ccachiToken",token);
+        setCookie("ccachiToken", token);
         this.setUser(response.data);
       } catch (error) {
         console.log(error);

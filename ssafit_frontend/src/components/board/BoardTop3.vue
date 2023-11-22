@@ -23,7 +23,7 @@ import { ref, onMounted, watch } from "vue";
 const store = useBoardStore();
 const router = useRouter();
 onMounted(async () => {
-  await store.getTop3BoardList();
+  store.getTop3BoardList();
 });
 
 const goToBoardDetail = (boardId) => {

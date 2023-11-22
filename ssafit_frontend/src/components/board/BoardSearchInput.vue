@@ -38,6 +38,7 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from "vue-router";
 import { useBoardStore } from "@/stores/board";
 import CustomButton from "../../elements/CustomButton.vue";
 import { globalColor } from "../../global/rootColor";
@@ -45,14 +46,25 @@ import { globalColor } from "../../global/rootColor";
 const colors = ref(globalColor);
 
 const store = useBoardStore();
+
 const searchInfo = ref({
   key: "none",
   word: "",
   orderBy: "none",
   orderByDir: "asc",
 });
-const searchBoardList = function () {
-  store.searchBoardList(searchInfo.value);
+
+const searchBoardList = () => {
+  const objectStartNum = 0;
+  const objectEndNum = 10;
+  const newSearchCondition = {
+    ...searchInfo.value,
+    objectStartNum,
+    objectEndNum,
+  };
+
+  store.setCondition(newSearchCondition);
+  store.searchBoardList(); // store의 searchBoardList 액션 호출
 };
 </script>
 <style scoped>
