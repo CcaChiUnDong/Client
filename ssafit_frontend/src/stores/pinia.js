@@ -1,41 +1,35 @@
 import { defineStore } from "pinia";
 import axios from "axios";
+import instance from "../global/request";
+import { deleteCookie, setCookie } from "../global/cookie";
+
 
 export const useAuthStore = defineStore("auth", {
   state: () => ({
-    user: null,
-    token: null,
+    isLogin : false,
+    user: {name : null, id :null},
   }),
 
   actions: {
     loadUser() {
-      const savedUser = sessionStorage.getItem("loginUser");
-      if (savedUser) {
-        this.user = JSON.parse(savedUser) || null;
-      }
+      
+      instance.get("/user",{
+        
+      }).then((res)=>{
+        this.setUser(res.data);
+      });
+
     },
-    // loadUser() {
-    //   axios
-    //     .get("http://localhost:8080/user/", {
-    //       headers: {
-    //         Authorization: `Bearer ${this.token}`,
-    //       },
-    //     })
-    //     .then((res) => {
-    //       console.log(res.data);
-    //     })
-    //     .catch((err) => console.log(err.response));
-    // },
+
     setUser(user) {
-      this.user = user;
-      sessionStorage.setItem("loginUser", JSON.stringify(user));
+      this.user = {...user};
+      this.isLogin = true;
     },
 
     // Logout user
     logout() {
-      this.user = null;
-      sessionStorage.removeItem("loginUser");
-      sessionStorage.removeItem("accessToken");
+      this.user = {name : null, id :null};
+      deleteCookie("ccachiToken");
     },
 
     // Login user
@@ -46,10 +40,8 @@ export const useAuthStore = defineStore("auth", {
           user
         );
 
-        this.token = response.headers.get("Authorization");
-        console.log(this.token);
-        sessionStorage.setItem("accessToken", this.token);
-        console.log(response.data);
+        const token = response.headers.get("Authorization");
+        setCookie("ccachiToken",token);
         this.setUser(response.data);
       } catch (error) {
         console.log(error);

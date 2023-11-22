@@ -30,3 +30,5 @@ coverage
 
 # API 키 파일
 apiKey.js
+.env.local
+.env.*.local

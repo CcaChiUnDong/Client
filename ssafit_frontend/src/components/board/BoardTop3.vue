@@ -27,7 +27,6 @@ onMounted(async () => {
 });
 
 const goToBoardDetail = (boardId) => {
-  console.log(boardId);
   router.push({ path: `board/${boardId}` });
 };
 </script>

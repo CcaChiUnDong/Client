@@ -17,8 +17,7 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: HomeView,
-      children: [{ path: "", name: "top3boardList", component: Top3BoardList }],
+      component: Top3BoardList,
     },
     {
       path: "/board",

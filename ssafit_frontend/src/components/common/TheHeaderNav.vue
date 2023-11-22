@@ -6,10 +6,10 @@
         <RouterLink :to="{ name: 'boardList' }">게시판</RouterLink>
       </div>
       <div>
-        <span v-if="isLoggedIn">{{ user.name }} 님</span>
-        <a href="/" v-if="isLoggedIn" @click="logoutUser">로그아웃</a>
+        <span v-if="userState.$state.isLogin">{{ userState.$state.user.name }} 님</span>
+        <a href="/" v-if="userState.$state.isLogin" @click="logoutUser">로그아웃</a>
         <RouterLink to="/login" v-else>로그인 </RouterLink>
-        <RouterLink :to="`/user/${user.id}`" v-if="isLoggedIn"
+        <RouterLink :to="`/user/${userState.$state.user.id}`" v-if="userState.$state.isLogin"
           >마이페이지</RouterLink
         >
         <RouterLink :to="{ name: 'Regist' }" v-else>회원가입</RouterLink>
@@ -24,23 +24,24 @@ import { useRouter } from "vue-router";
 import { onMounted } from "vue";
 import { useAuthStore } from "../../stores/pinia";
 import { globalColor } from "../../global/rootColor";
+import { getCookie } from "../../global/cookie";
 
 const primaryColor = ref(globalColor.primaryColor);
 const primaryColorBabyBlue = ref(globalColor.primaryColorBabyBlue);
 const primaryColorTiffanyBlue = ref(globalColor.primaryColorTiffanyBlue);
 const primaryColorBlueGreen = ref(globalColor.primaryColorBlueGreen);
 
-const userString = sessionStorage.getItem("loginUser");
-const user = userString ? JSON.parse(userString) : null;
-
-const isLoggedIn = computed(() => !!sessionStorage.getItem("accessToken"));
+const userState = useAuthStore();
 
 const logoutUser = () => {
   useAuthStore().logout();
 };
 
 onMounted(() => {
-  useAuthStore().loadUser();
+  const token = getCookie('ccachiToken');
+  if(token){
+    useAuthStore().loadUser();
+  }
 });
 </script>
 
@@ -51,10 +52,6 @@ onMounted(() => {
 * {
   font-size: 20px;
 }
-/* 
-nav {
-  padding: 30px;
-} */
 
 nav a {
   font-weight: bold;
