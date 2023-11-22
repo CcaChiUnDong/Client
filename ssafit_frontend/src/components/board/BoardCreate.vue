@@ -43,7 +43,6 @@ import { useBoardStore } from "@/stores/board";
 import { useAuthStore } from "../../stores/pinia";
 
 const user = useAuthStore().user;
-console.log(user);
 const store = useBoardStore();
 const board = ref({
   title: "",

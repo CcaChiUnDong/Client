@@ -41,13 +41,13 @@
       />
     </div>
     <hr />
-    <div>
-      <RouterLink
-        :to="{ name: 'boardCreate' }"
-        style="text-decoration: none"
-        v-if="authStore.user"
-        >게시글 작성</RouterLink
-      >
+    <div class="pagination-container">
+      <CustomButton
+        style="width: 30%"
+        v-if="!!authStore.user.id"
+        text="글 작성"
+        @click="goToBoardCreate"
+      />
     </div>
     <br />
     <BoardSearchInput
@@ -65,10 +65,16 @@ import BoardSearchInput from "./BoardSearchInput.vue";
 import { globalColor } from "../../global/rootColor";
 import axios from "axios";
 import CustomButton from "../../elements/CustomButton.vue";
+import { useRouter } from "vue-router";
 
 const colors = ref(globalColor);
 const authStore = useAuthStore();
 const store = useBoardStore();
+const router = useRouter();
+
+const goToBoardCreate = () => {
+  router.push({ name: "boardCreate" });
+};
 
 const formatCreatedAt = (createAt) => {
   const date = new Date(createAt);
