@@ -7,7 +7,7 @@
         readonly
         type="email"
         id="email"
-        v-model="user.email"
+        v-model="userStore.user.email"
         class="view"
       /><br />
       <!-- <label for="password">비밀번호</label>
@@ -22,7 +22,7 @@
         readonly
         type="text"
         id="name"
-        v-model="user.name"
+        v-model="userStore.user.name"
         class="view"
       /><br />
       <CustomButton
@@ -42,14 +42,13 @@ import { useAuthStore } from "@/stores/pinia";
 import { useRouter } from "vue-router";
 import instance from "../../global/request";
 
-const userString = sessionStorage.getItem("loginUser");
-const user = userString ? JSON.parse(userString) : null;
+const userStore = useAuthStore().$state;
 const router = useRouter();
 
 // Delete user
 const deleteUser = () => {
   try {
-    instance.delete("/user",{}).then((res)=>{
+    instance.delete("/user", {}).then((res) => {
       useAuthStore().logout();
       alert("사용자 정보가 삭제되었습니다.");
       router.push({ name: "home" });

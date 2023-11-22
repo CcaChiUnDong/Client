@@ -45,6 +45,7 @@ export const useAuthStore = defineStore("auth", {
         const token = response.headers.get("Authorization");
         setCookie("ccachiToken", token);
         this.setUser(response.data);
+        alert("로그인 성공");
       } catch (error) {
         console.log(error);
         alert("로그인 실패");

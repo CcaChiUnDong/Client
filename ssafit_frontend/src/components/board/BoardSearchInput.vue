@@ -64,6 +64,7 @@ const searchBoardList = () => {
   };
 
   store.setCondition(newSearchCondition);
+  store.setTotalPage();
   store.searchBoardList(); // store의 searchBoardList 액션 호출
 };
 </script>

@@ -39,9 +39,16 @@ export const useBoardStore = defineStore({
 
     async setTotalPage() {
       //검색 조건을 끼워넣은 count 반환하도록 수정
-      const response = await axios.get(`${REST_BOARD_API}/count`);
+      const response = await axios.post(
+        `${REST_BOARD_API}/count`,
+        this.searchCondition,
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      // console.log(response);
       this.totalBoard = response.data;
-      console.log(this.totalBoard);
+      // console.log(this.totalBoard);
     },
 
     async getTop3BoardList() {
@@ -131,7 +138,6 @@ export const useBoardStore = defineStore({
 
     async searchBoardList() {
       // console.log(this.searchCondition);
-      this.setTotalPage();
       try {
         const response = await axios.post(
           `${REST_BOARD_API}/search`,

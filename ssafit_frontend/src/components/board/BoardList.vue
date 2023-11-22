@@ -2,12 +2,12 @@
   <div>
     <table class="custom-table">
       <tr>
-        <th>번호</th>
-        <th>제목</th>
-        <th>내용</th>
-        <th>작성자</th>
-        <th>등록일</th>
-        <th>조회수</th>
+        <th style="width: 7%">번호</th>
+        <th style="width: 25%">제목</th>
+        <th style="width: 35%">내용</th>
+        <th style="width: 13%">작성자</th>
+        <th style="width: 10%">등록일</th>
+        <th style="width: 10%">조회수</th>
       </tr>
       <tr v-for="board in store.boardList" :key="board.id">
         <td style="text-align: center">{{ board.id }}</td>
@@ -27,7 +27,7 @@
         <td style="text-align: center">{{ board.visited }}</td>
       </tr>
     </table>
-    <div>
+    <div class="pagination-container">
       <CustomButton
         @click="changePage(-1)"
         v-if="currentPage > 1"
@@ -137,5 +137,17 @@ onMounted(() => {
 .custom-table th {
   background-color: v-bind(colors.primaryColorBabyBlue);
   text-align: center;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+span {
+  margin: 0 10px;
+  font-weight: bold;
 }
 </style>
