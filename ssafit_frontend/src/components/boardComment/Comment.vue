@@ -1,17 +1,6 @@
 <template>
-  <div class="container1">
-    <div class="table">
-      <div class="comment" v-for="comment in commentList" :key="comment.id">
-        <span class="user">{{ comment.user.name }}</span>
-        <span class="content">{{ comment.content }}</span>
-        <span class="createdAt">{{ formatCreatedAt(comment.create_at) }}</span>
-        <CustomButton
-          text="삭제"
-          v-if="isLoggedIn && comment.user.id == user.id"
-          @click="deleteComment(comment.id)"
-        />
-      </div>
-    </div>
+  <div class="container">
+    
   </div>
 </template>
 
@@ -20,7 +9,6 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, ref, onMounted } from "vue";
 import { useAuthStore } from "../../stores/pinia";
 import axios from "axios";
-import CustomButton from "../../elements/CustomButton.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -72,7 +60,7 @@ onMounted(() => {
 </script>
 
 <style scoped>
-  .container1{
+  .container{
     padding: 0px;
     width: 100%;
   }
@@ -81,22 +69,4 @@ onMounted(() => {
     display: flex;
     flex-direction: column;
   }
-  .comment{
-    margin: 10px 15px 10px 15px;
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    gap : 7px;
-  }
-  .user{
-    font-weight: 700;
-  }
-  .contents{
-
-  }
-  .createdAt{
-    color : gray;
-    font-size : 12px;
-  }
-
 </style>

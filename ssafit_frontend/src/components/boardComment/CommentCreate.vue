@@ -27,12 +27,12 @@ const router = useRouter();
 const REST_COMMENT_API = `http://localhost:8080/comment`;
 
 const commentContent = ref("");
-const user = useAuthStore().user;
+const userStore = useAuthStore().$state;
 
 const createComment = () => {
   const comment = {
     content: commentContent.value,
-    user_id: user.id,
+    user_id: userStore.user.id,
     board_id: `${route.params.id}`,
   };
   axios({
@@ -45,7 +45,7 @@ const createComment = () => {
   })
     .then(() => {
       console.log(comment);
-      router.go(0);
+      window.location.reload();
     })
     .catch((err) => {
       console.log(err);

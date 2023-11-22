@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div style="padding-bottom:  30px;">
     <div class="container">
       <span
         class="title"
@@ -49,10 +49,19 @@
           @click="deleteBoard"
         />
       </div>
+
+      <div class="Line"></div>
+
+
+      <div class="boardInfo">
+        <span class="writer">댓글 {{ store.board.comment_count }}</span>
+      </div>
+
+      <CommentList />
+      <CommentCreate />
     </div>
-    <CommentList />
-    <CommentCreate />
-    <button class="btn" @click="goToList">목록</button>
+    
+    <div class="boardManager" style="margin-top: 10px;"><CustomButton text = "목록"  @click="goToList"/></div>
   </div>
 </template>
 
@@ -69,7 +78,6 @@ import CustomButton from "../../elements/CustomButton.vue";
 
 const store = useBoardStore();
 const userStore = useAuthStore().$state;
-const user = useAuthStore().$state.user;
 const route = useRoute();
 const router = useRouter();
 const colors = globalColor;
@@ -91,14 +99,12 @@ const getYouTubeEmbedUrlById = () => {
 };
 const isMine = computed({
   get(){
-    console.log(userStore.user.id , store.board.userId , userStore.user.id === store.board.userId)
     return userStore.user.id === store.board.userId;
   }
   ,set(){
     isMine.value = userStore.user.id === store.board.userId;
   }
 })
-console.log(isMine.value);
 
 
 const formattedCreatedAt = computed(() => {
@@ -151,7 +157,7 @@ const goToList = () => {
 
   }
   .writer{
-    font-size: 12px;
+    font-size: 15px;
     color : gray;
     margin-left: 5px;
   }
@@ -183,4 +189,5 @@ const goToList = () => {
     justify-content: end;
     gap : 10px
   }
+
 </style>
