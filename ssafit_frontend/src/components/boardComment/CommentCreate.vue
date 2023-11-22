@@ -1,19 +1,13 @@
 <template>
-  <div>
-    <fieldset class="text-center">
-      <label for="commentContent">댓글</label>
+    <div class="InputContainer">
       <input
         type="text"
-        id="commentContent"
         v-model="commentContent"
-        class="view"
-        style="width: 70%"
+        class="commentInput"
       />
-      <button class="btn-sm" style="margin-left: 30px" @click="createComment">
-        등록
-      </button>
-    </fieldset>
-  </div>
+      <CustomButton text="등록" height="50" @click="createComment"/>
+      
+    </div>
 </template>
 
 <script setup>
@@ -21,6 +15,7 @@ import { useRoute, useRouter } from "vue-router";
 import { computed, ref, onMounted } from "vue";
 import { useAuthStore } from "../../stores/pinia";
 import axios from "axios";
+import CustomButton from "../../elements/CustomButton.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -53,4 +48,21 @@ const createComment = () => {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+  .commentInput{
+    border : 1px solid rgba(165, 165, 165, 0.486);
+  }
+  .InputContainer{
+    margin : 10px;
+    width: 100%;
+    
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  .commentInput{
+    width: 85%;
+    height: 50px;
+    border-radius: 5px;
+  }
+</style>

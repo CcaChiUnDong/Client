@@ -1,16 +1,26 @@
 <template>
   <div class="container1">
     <div class="table">
-      <div class="comment" v-for="comment in commentList" :key="comment.id">
-        <span class="user">{{ comment.user.name }}</span>
-        <span class="content">{{ comment.content }}</span>
-        <span class="createdAt">{{ formatCreatedAt(comment.create_at) }}</span>
+      <div class="comment" v-for="comment in commentList" :key="comment.id"> 
+      <div class="commentContainer">
+        <div class="comment" >
+          <span class="user">{{ comment.user.name }}</span>
+          <span class="content">{{ comment.content }}</span>
+          <span class="createdAt">{{ formatCreatedAt(comment.create_at) }}</span>
+
+
+          
+        </div>
+
         <CustomButton
-          text="삭제"
-          v-if="isLoggedIn && comment.user.id == user.id"
-          @click="deleteComment(comment.id)"
-        />
+            text="삭제"
+            v-if="userStore.isLogin && comment.user.id == userStore.user.id"
+            @click="deleteComment(comment.id)"
+          />
       </div>
+      <div class="Line"></div>
+
+    </div>
     </div>
   </div>
 </template>
@@ -26,9 +36,10 @@ const route = useRoute();
 const router = useRouter();
 const REST_COMMENT_API = `http://localhost:8080/comment`;
 
+
 const commentList = ref([]);
 const user = useAuthStore().$state.user;
-const isLoggedIn = computed(() => !!user);
+const userStore = useAuthStore().$state;
 
 const getCommentList = function () {
   axios
@@ -97,6 +108,15 @@ onMounted(() => {
   .createdAt{
     color : gray;
     font-size : 12px;
+  }.Line{
+    width: 100%;
+    height: 0px;
+    border-top: 0.1px rgba(155, 155, 155, 0.164) solid;
+    margin-bottom: 10px;
   }
-
+  .commentContainer{
+    display: flex;
+    justify-content:space-between;
+    align-items: center;
+  }
 </style>
