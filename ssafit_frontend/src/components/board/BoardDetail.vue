@@ -1,28 +1,22 @@
 <template>
   <div>
-    <h4>게시글 상세</h4>
-    <fieldset class="text-center">
-      <label for="title">제목</label>
-      <input
-        readonly
-        type="text"
-        id="title"
-        v-model="store.board.title"
-        class="view"
-      /><br />
-      <label for="user">작성자</label>
-      <input
-        readonly
-        type="text"
-        id="user"
-        v-model="store.board.user.name"
-        class="view"
-      /><br />
-      <label for="url">URL</label>
+    <div class="container">
+      <span
+        class="title"
+      >{{ store.board.title }}</span>
+      <div class="boardInfo">
+        <span
+        class="writer"
+        >{{ store.board.user.name }}</span>
+        <span class="writer">{{ formattedCreatedAt }}</span>
+      </div>
+      
+
+      <div class="Line"></div>
+      
       <div v-if="isYouTubeVideo(store.board.url)">
         <iframe
-          width="560"
-          height="315"
+          class="video"
           :src="getYouTubeEmbedUrl(store.board.url)"
           frameborder="0"
           allowfullscreen
@@ -37,45 +31,25 @@
           allowfullscreen
         ></iframe>
       </div>
-      <input
-        v-else
-        readonly
-        type="text"
-        id="url"
-        v-model="store.board.url"
-        class="view"
-      /><br />
-      <label for="contents">내용</label>
-      <input
-        readonly
-        type="text"
-        id="contents"
-        v-model="store.board.contents"
-        class="view"
-      /><br />
-      <label for="createdAt">작성일</label>
-      <input
-        readonly
-        type="text"
-        id="createdAt"
-        v-model="formattedCreatedAt"
-        class="view"
-      /><br />
-      <div v-if="store.board.userId && user" style="float: right">
-        <RouterLink
-          v-if="store.board.userId == user.id"
-          :to="`/board/${store.board.id}/update`"
-          >수정</RouterLink
-        >
-        <button
-          style="margin: 10px"
+
+      <pre class="contents">{{ store.board.contents }}</pre>
+      
+      
+      <div v-if="isMine" class="boardManager">
+        <CustomButton
+          text = "수정"
+          height="30"
+          width="45"
+          @click="updateBoard(store.board.id)"
+          />
+        <CustomButton
+          text="삭제"
+          height="30"
+          width="45"
           @click="deleteBoard"
-          v-if="store.board.userId == user.id"
-        >
-          삭제
-        </button>
+        />
       </div>
-    </fieldset>
+    </div>
     <CommentList />
     <CommentCreate />
     <button class="btn" @click="goToList">목록</button>
@@ -85,17 +59,23 @@
 <script setup>
 import { useRoute, useRouter } from "vue-router";
 import { useBoardStore } from "@/stores/board";
-import { computed, onMounted } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { useAuthStore } from "../../stores/pinia";
 import CommentCreate from "../boardComment/CommentCreate.vue";
 import CommentList from "../boardComment/CommentList.vue";
 import axios from "axios";
+import { globalColor } from "../../global/rootColor";
+import CustomButton from "../../elements/CustomButton.vue";
 
 const store = useBoardStore();
+const userStore = useAuthStore().$state;
 const user = useAuthStore().$state.user;
 const route = useRoute();
 const router = useRouter();
-// console.log(store.board);
+const colors = globalColor;
+const primaryColor = globalColor.primaryColor;
+const primaryColorBabyBlue = globalColor.primaryColorBabyBlue;
+console.log(store.board);
 
 const isYouTubeVideo = (url) => url && url.includes("youtube.com");
 
@@ -109,6 +89,17 @@ const isYouTubeVideoId = (url) => url;
 const getYouTubeEmbedUrlById = () => {
   return `https://www.youtube.com/embed/${store.board.url}`;
 };
+const isMine = computed({
+  get(){
+    console.log(userStore.user.id , store.board.userId , userStore.user.id === store.board.userId)
+    return userStore.user.id === store.board.userId;
+  }
+  ,set(){
+    isMine.value = userStore.user.id === store.board.userId;
+  }
+})
+console.log(isMine.value);
+
 
 const formattedCreatedAt = computed(() => {
   const date = new Date(store.board.createdAt);
@@ -130,10 +121,66 @@ const deleteBoard = () => {
     router.push({ name: "boardList" });
   });
 };
+const updateBoard = (id) => {
+  router.push({ path : `/board/${id}/update` });
+};
 
 const goToList = () => {
   router.push({ name: "boardList" });
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+  .container {
+    display: flex;
+    gap: 5px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+
+    padding: 20px;
+
+    border-radius: 5px;
+    border: 1px v-bind(primaryColorBabyBlue) solid;
+    width: 70vw;
+    height: auto;
+  }
+  .title{
+    font-size: 30px;
+
+  }
+  .writer{
+    font-size: 12px;
+    color : gray;
+    margin-left: 5px;
+  }
+  .Line{
+    width: 100%;
+    height: 0px;
+    border-top: 0.1px rgba(155, 155, 155, 0.486) solid;
+    margin-bottom: 10px;
+  }
+  .video{
+    width: 70vw;
+    height: calc(70vw / 16 * 9);
+  }
+  .contents{
+    white-space:pre-wrap;
+    word-wrap:break-word;
+    word-break: break-all;
+    width: 100%;
+    height: auto;
+  }
+  .boardInfo{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
+  .boardManager{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    gap : 10px
+  }
+</style>

@@ -29,6 +29,7 @@ export const useAuthStore = defineStore("auth", {
     // Logout user
     logout() {
       this.user = {name : null, id :null};
+      this.isLogin = false;
       deleteCookie("ccachiToken");
     },
 

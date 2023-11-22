@@ -40,18 +40,20 @@ import axios from "axios";
 import CustomButton from "../../elements/CustomButton.vue";
 import { useAuthStore } from "@/stores/pinia";
 import { useRouter } from "vue-router";
+import instance from "../../global/request";
 
 const userString = sessionStorage.getItem("loginUser");
 const user = userString ? JSON.parse(userString) : null;
 const router = useRouter();
 
 // Delete user
-const deleteUser = (user) => {
+const deleteUser = () => {
   try {
-    axios.delete(`http://localhost:8080/user/${user.id}`);
-    alert("사용자 정보가 삭제되었습니다.");
-    useAuthStore().logout();
-    router.push({ name: "home" });
+    instance.delete("/user",{}).then((res)=>{
+      useAuthStore().logout();
+      alert("사용자 정보가 삭제되었습니다.");
+      router.push({ name: "home" });
+    });
   } catch (error) {
     console.error(error);
   }

@@ -12,7 +12,6 @@ export const useBoardStore = defineStore("board", () => {
   const boardList = ref([]);
   const getBoardList = function () {
     axios.get(REST_BOARD_API).then((response) => {
-      // console.log(response.data);
       boardList.value = response.data;
     });
   };
@@ -118,7 +117,7 @@ export const useBoardStore = defineStore("board", () => {
       });
   };
 
-  const searchBoardList = function (searchCondition) {
+  const searchBoardList = function (searchCondition = {key: 'none', word: '', orderBy: 'none', orderByDir: 'asc'}) {
     axios.post(`${REST_BOARD_API}/search`, searchCondition).then((res) => {
       boardList.value = res.data;
       console.log(searchCondition);

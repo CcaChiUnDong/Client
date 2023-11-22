@@ -72,7 +72,7 @@ const formatCreatedAt = (createAt) => {
 };
 
 onMounted(() => {
-  store.getBoardList();
+  store.searchBoardList();
 });
 </script>
 
