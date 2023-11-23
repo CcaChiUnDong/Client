@@ -1,19 +1,14 @@
 <template>
-  <div style="padding-bottom:  30px;">
+  <div style="padding-bottom: 30px">
     <div class="container">
-      <span
-        class="title"
-      >{{ store.board.title }}</span>
+      <span class="title">{{ store.board.title }}</span>
       <div class="boardInfo">
-        <span
-        class="writer"
-        >{{ store.board.user.name }}</span>
+        <span class="writer">{{ store.board.user.name }}</span>
         <span class="writer">{{ formattedCreatedAt }}</span>
       </div>
-      
 
       <div class="Line"></div>
-      
+
       <div v-if="isYouTubeVideo(store.board.url)">
         <iframe
           class="video"
@@ -33,25 +28,18 @@
       </div>
 
       <pre class="contents">{{ store.board.contents }}</pre>
-      
-      
+
       <div v-if="isMine" class="boardManager">
         <CustomButton
-          text = "수정"
+          text="수정"
           height="30"
           width="45"
           @click="updateBoard(store.board.id)"
-          />
-        <CustomButton
-          text="삭제"
-          height="30"
-          width="45"
-          @click="deleteBoard"
         />
+        <CustomButton text="삭제" height="30" width="45" @click="deleteBoard" />
       </div>
 
       <div class="Line"></div>
-
 
       <div class="boardInfo">
         <span class="writer">댓글 {{ store.board.comment_count }}</span>
@@ -60,8 +48,10 @@
       <CommentList />
       <CommentCreate />
     </div>
-    
-    <div class="boardManager" style="margin-top: 10px;"><CustomButton text = "목록"  @click="goToList"/></div>
+
+    <div class="boardManager" style="margin-top: 10px">
+      <CustomButton text="목록" @click="goToList" />
+    </div>
   </div>
 </template>
 
@@ -98,14 +88,13 @@ const getYouTubeEmbedUrlById = () => {
   return `https://www.youtube.com/embed/${store.board.url}`;
 };
 const isMine = computed({
-  get(){
+  get() {
     return userStore.user.id === store.board.userId;
-  }
-  ,set(){
+  },
+  set() {
     isMine.value = userStore.user.id === store.board.userId;
-  }
-})
-
+  },
+});
 
 const formattedCreatedAt = computed(() => {
   const date = new Date(store.board.createdAt);
@@ -128,7 +117,7 @@ const deleteBoard = () => {
   });
 };
 const updateBoard = (id) => {
-  router.push({ path : `/board/${id}/update` });
+  router.push({ path: `/board/${id}/update` });
 };
 
 const goToList = () => {
@@ -137,57 +126,54 @@ const goToList = () => {
 </script>
 
 <style scoped>
+.container {
+  display: flex;
+  gap: 5px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
 
-  .container {
-    display: flex;
-    gap: 5px;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
+  padding: 20px;
 
-    padding: 20px;
-
-    border-radius: 5px;
-    border: 1px v-bind(primaryColorBabyBlue) solid;
-    width: 70vw;
-    height: auto;
-  }
-  .title{
-    font-size: 30px;
-
-  }
-  .writer{
-    font-size: 15px;
-    color : gray;
-    margin-left: 5px;
-  }
-  .Line{
-    width: 100%;
-    height: 0px;
-    border-top: 0.1px rgba(155, 155, 155, 0.486) solid;
-    margin-bottom: 10px;
-  }
-  .video{
-    width: 70vw;
-    height: calc(70vw / 16 * 9);
-  }
-  .contents{
-    white-space:pre-wrap;
-    word-wrap:break-word;
-    word-break: break-all;
-    width: 100%;
-    height: auto;
-  }
-  .boardInfo{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-  }
-  .boardManager{
-    width: 100%;
-    display: flex;
-    justify-content: end;
-    gap : 10px
-  }
-
+  border-radius: 5px;
+  border: 1px v-bind(primaryColorBabyBlue) solid;
+  width: 70vw;
+  height: auto;
+}
+.title {
+  font-size: 30px;
+}
+.writer {
+  font-size: 15px;
+  color: gray;
+  margin-left: 5px;
+}
+.Line {
+  width: 100%;
+  height: 0px;
+  border-top: 0.1px rgba(155, 155, 155, 0.486) solid;
+  margin-bottom: 10px;
+}
+.video {
+  width: 70vw;
+  height: calc(70vw / 16 * 9);
+}
+.contents {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-all;
+  width: 100%;
+  height: auto;
+}
+.boardInfo {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+.boardManager {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+}
 </style>

@@ -63,6 +63,7 @@ const searchBoardList = () => {
     objectEndNum,
   };
 
+  store.setPage(1);
   store.setCondition(newSearchCondition);
   store.setTotalPage();
   store.searchBoardList(); // store의 searchBoardList 액션 호출

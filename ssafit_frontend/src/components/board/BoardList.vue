@@ -30,13 +30,13 @@
     <div class="pagination-container">
       <CustomButton
         @click="changePage(-1)"
-        v-if="currentPage > 1"
+        v-if="store.currentPage > 1"
         text="이전"
       />
-      <span>{{ currentPage }} 페이지</span>
+      <span>{{ store.currentPage }} 페이지</span>
       <CustomButton
         @click="changePage(1)"
-        v-if="currentPage * pageSize < store.totalBoard"
+        v-if="store.currentPage * pageSize < store.totalBoard"
         text="다음"
       />
     </div>
@@ -60,7 +60,7 @@
 <script setup>
 import { useBoardStore } from "@/stores/board";
 import { useAuthStore } from "../../stores/pinia";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import BoardSearchInput from "./BoardSearchInput.vue";
 import { globalColor } from "../../global/rootColor";
 import axios from "axios";
@@ -93,7 +93,7 @@ const formatCreatedAt = (createAt) => {
     return `${minutes}분 전`;
   }
 };
-let currentPage = store.currentPage;
+
 const pageSize = 10; // 페이지당 아이템 수
 
 // 검색 및 페이징 로직
@@ -103,13 +103,12 @@ const performSearch = () => {
 };
 
 const changePage = (delta) => {
-  store.setPage(currentPage + delta);
-  currentPage = currentPage + delta;
+  store.setPage(store.currentPage + delta);
   fetchBoardList();
 };
 
 const fetchBoardList = () => {
-  const objectStartNum = (currentPage - 1) * pageSize;
+  const objectStartNum = (store.currentPage - 1) * pageSize;
   const objectEndNum = 10;
   const newSearchCondition = {
     ...store.searchCondition,

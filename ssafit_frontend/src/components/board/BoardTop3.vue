@@ -1,6 +1,6 @@
 <template>
   <div class="video-container">
-    <h2>인기 동영상</h2>
+    <h2 class="title">인기 동영상</h2>
     <div
       v-for="(board, index) in store.top3BoardList"
       :key="board.id"
@@ -19,6 +19,9 @@ import { useYoutubeStore } from "@/stores/youtube";
 import { useBoardStore } from "@/stores/board";
 import { useRouter } from "vue-router";
 import { ref, onMounted, watch } from "vue";
+import { globalColor } from "../../global/rootColor";
+
+const primaryColor = globalColor.primaryColor;
 
 const store = useBoardStore();
 const router = useRouter();
@@ -44,5 +47,9 @@ const goToBoardDetail = (boardId) => {
   padding: 10px;
   border: 1px solid #ddd;
   cursor: pointer;
+}
+
+.title {
+  color: v-bind(primaryColor);
 }
 </style>

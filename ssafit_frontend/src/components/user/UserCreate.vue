@@ -1,32 +1,29 @@
 <template>
   <div class="container">
     <div class="con">
-    <div class="text-center">
-      <label for="name">이름</label>
-      <input type="text" id="name" v-model="name" class="view" /><br />
-      <label for="email">이메일</label>
-      <input type="email" id="email" v-model="email" class="view" />
-      <br />
-      <label for="password">비밀번호</label>
-      <input
-        type="password"
-        id="password"
-        v-model="password"
-        class="view"
-      /><br />
-      <label for="password2">비밀번호 확인</label>
-      <input
-        type="password"
-        id="password2"
-        v-model="password2"
-        class="view"
-      /><br />
-      <CustomButton 
-      @click="regist" 
-      text="등록"
-      />
+      <div class="text-center">
+        <label for="name">이름</label>
+        <input type="text" id="name" v-model="name" class="view" /><br />
+        <label for="email">이메일</label>
+        <input type="email" id="email" v-model="email" class="view" />
+        <br />
+        <label for="password">비밀번호</label>
+        <input
+          type="password"
+          id="password"
+          v-model="password"
+          class="view"
+        /><br />
+        <label for="password2">비밀번호 확인</label>
+        <input
+          type="password"
+          id="password2"
+          v-model="password2"
+          class="view"
+        /><br />
+        <CustomButton @click="regist" text="등록" />
+      </div>
     </div>
-  </div>
   </div>
 </template>
 
@@ -37,7 +34,7 @@ import { useRouter } from "vue-router";
 import CustomButton from "../../elements/CustomButton.vue";
 import { globalColor } from "../../global/rootColor";
 
-const color = ref(globalColor.primaryColorTiffanyBlue)
+const color = ref(globalColor.primaryColorTiffanyBlue);
 
 const REST_USER_API = `http://localhost:8080/user`;
 
@@ -110,21 +107,21 @@ const createUser = (user) => {
 </script>
 
 <style scoped>
-  .container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .text-center{
-    display: flex;
-    width: 100%;
-    flex-direction: column;
-    justify-content: center;
-  }
-  .con{
-    width: 25%;
-    padding: 30px;
-    border: 1px v-bind(color) solid;
-    border-radius: 10px;
-  }
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.text-center {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  justify-content: center;
+}
+.con {
+  width: 25%;
+  padding: 30px;
+  border: 1px v-bind(color) solid;
+  border-radius: 10px;
+}
 </style>
